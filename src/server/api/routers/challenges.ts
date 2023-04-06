@@ -13,4 +13,9 @@ export const challengesRouter = createTRPCRouter({
   getAllChallenges: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.challenge.findMany({ select: { tasks: true } });
   }),
+  getAllUsers: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.user.findMany({
+      include: { challenges: true, tasks: true },
+    });
+  }),
 });

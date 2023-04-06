@@ -4,12 +4,11 @@ import Checkbox from "~/components/Checkbox/Checkbox";
 
 import Layout from "~/components/Layout/Layout";
 
-import { api } from "~/utils/api";
+// import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const { data } = api.challenges.getAllChallenges.useQuery();
-
-  console.log("DATA", data);
+  // const { data } = api.challenges.getAllChallenges.useQuery();
+  // const { data: users } = api.challenges.getAllUsers.useQuery();
 
   return (
     <>

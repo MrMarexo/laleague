@@ -39,8 +39,8 @@ model User {
   name                String
   email               String           @unique
   password            String
-  completedChallenges UserChallenge[]
-  completedTasks      UserTask[]
+  challenges UserChallenge[]
+  tasks      UserTask[]
 }
 
 model UserChallenge {
@@ -49,7 +49,7 @@ model UserChallenge {
   userId        String
   challenge      Challenge @relation(fields: [challengeId], references: [id])
   challengeId   String
-  date_completed DateTime?
+  dateCompleted DateTime?
 
   @@index([userId])
   @@index([challengeId])
@@ -61,7 +61,7 @@ model UserTask {
   userId        String
   task           Task      @relation(fields: [taskId], references: [id])
   taskId        String
-  date_completed DateTime?
+  dateCompleted DateTime?
   challenge      Challenge @relation(fields: [challengeId], references: [id])
   challengeId   String
 
