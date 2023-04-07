@@ -1,14 +1,18 @@
+import { useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import Checkbox from "~/components/Checkbox/Checkbox";
 
 import Layout from "~/components/Layout/Layout";
 
-// import { api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 
 const Home: NextPage = () => {
-  // const { data } = api.challenges.getAllChallenges.useQuery();
-  // const { data: users } = api.challenges.getAllUsers.useQuery();
+  const { data } = api.challenges.getTasksFromLastChallenge.useQuery();
+
+  type TasksFromUserChallenge =
+    RouterOutputs["challenges"]["getTasksFromLastChallenge"];
 
   return (
     <>
@@ -18,24 +22,17 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <h1 className="mb-20 text-8xl font-extrabold tracking-tight">
-          Street League
-        </h1>
+        <h1 className="mb-20 text-8xl font-extrabold tracking-tight">League</h1>
         <h2 className="mb-4 text-xl">Current challenge</h2>
         <div className="mb-20 flex flex-col items-center gap-2  border-2 border-black px-8 py-4">
-          <div className="flex flex-row gap-8">
-            <p>run 20km in total</p>
-            <Checkbox />
-          </div>
-          <div className="flex flex-row gap-8">
-            <p>3h boxing training</p>
-            <Checkbox />
-          </div>
-          <div className="flex flex-row gap-8">
-            <p>do 100 pushups</p>
-            <Checkbox />
-          </div>
-          <p className="font-bold">+8p</p>
+          {data?.challenge &&
+            data.challenge.tasks.map((task, i) => (
+              <div key={i} className="flex flex-row gap-8">
+                <p>{task.title}</p>
+                <input type="checkbox" value={i} />
+              </div>
+            ))}
+          <p className="font-bold">+{data?.challenge.point || 0}p</p>
         </div>
         <h2 className="mb-4 text-xl">Who completed this challenge already?</h2>
         <div className="mb-20 flex flex-col gap-4  border-2 border-black px-8 py-4">

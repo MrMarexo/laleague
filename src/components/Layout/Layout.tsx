@@ -1,10 +1,10 @@
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { signIn, signOut, useSession } from "next-auth/react";
 import React from "react";
 import { type ReactFCC } from "~/types/types";
 import Link from "../Link/Link";
 
 const Layout: ReactFCC = ({ children }) => {
-  const user = useUser();
+  const { data } = useSession();
 
   return (
     <main className="flex min-h-screen flex-col items-center">
@@ -21,7 +21,28 @@ const Layout: ReactFCC = ({ children }) => {
             <Link href="/scoreboard">Scoreboard</Link>
           </nav>
         </div>
-        {user.isSignedIn ? (
+        {data?.user?.name ? (
+          <div className="flex flex-row gap-2">
+            <div>
+              Welcome, <span className="font-bold">{data.user.name}</span>
+            </div>
+            <div>|</div>
+            <button
+              className="transition duration-300 hover:text-pink-700"
+              onClick={() => void signOut()}
+            >
+              Sign out
+            </button>
+          </div>
+        ) : (
+          <button
+            className="transition duration-300 hover:text-pink-700"
+            onClick={() => void signIn()}
+          >
+            Sign in
+          </button>
+        )}
+        {/* {user.isSignedIn ? (
           <div className="flex flex-row gap-2">
             <div>
               Welcome, <span className="font-bold">{user.user.firstName}</span>
@@ -37,7 +58,7 @@ const Layout: ReactFCC = ({ children }) => {
               Sign in
             </button>
           </SignInButton>
-        )}
+        )} */}
       </div>
       <div className="container flex flex-col items-center justify-center px-4 py-16 ">
         {children}
