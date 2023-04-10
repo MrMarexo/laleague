@@ -210,7 +210,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <h1 className="mb-20 text-8xl font-extrabold tracking-tight">League</h1>
+        <h1 className="mb-20 mt-20 text-8xl font-extrabold tracking-tight">
+          League
+        </h1>
         <h2 className="mb-4 text-xl">Current challenge</h2>
         {sessionData ? (
           <LoggedInForm
