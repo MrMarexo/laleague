@@ -12,18 +12,18 @@ generator client {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -42,15 +42,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?         @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  challenges UserChallenge[]
-  tasks      UserTask[]
+  challenges    UserChallenge[]
+  points        Int   @default(0)
+  curChallengeExtraPoints Int   @default(0)
 }
 
 model VerificationToken {
@@ -62,53 +63,67 @@ model VerificationToken {
 }
 
 model Challenge {
-  id          String              @id @default(cuid())
+  id          String          @id @default(cuid())
   title       String
   description String
-  startDate  DateTime              @default(now())
-  endDate    DateTime
+  startDate   DateTime        
+  endDate     DateTime
   point       Int
   tasks       Task[]
   users       UserChallenge[]
-  UserTask   UserTask[]
+  // UserTask   UserTask[]
 }
 
 model Task {
-  id           String         @id @default(cuid())
-  title        String
-  description  String
-  challenge    Challenge   @relation(fields: [challengeId], references: [id])
-  challengeId String
-  users        UserTask[]
+  id                String              @id @default(cuid())
+  title             String
+  description       String
+  challenge         Challenge           @relation(fields: [challengeId], references: [id])
+  challengeId       String
+  // users        UserTask[]
+  UserChallengeTask UserChallengeTask[]
 
   @@index([challengeId])
 }
 
+model UserChallengeTask {
+  id              String        @id @default(cuid())
+  task            Task          @relation(fields: [taskId], references: [id])
+  taskId          String
+  userChallenge   UserChallenge @relation(fields: [userChallengeId], references: [id])
+  userChallengeId String
+  taskCompletedAt DateTime?
+  notes String?
 
-
-model UserChallenge {
-  id             String       @id @default(cuid())
-  user           User      @relation(fields: [userId], references: [id])
-  userId        String
-  challenge      Challenge @relation(fields: [challengeId], references: [id])
-  challengeId   String
-  dateCompleted DateTime?
-
-  @@index([userId])
-  @@index([challengeId])
-}
-
-model UserTask {
-  id             String       @id @default(cuid())
-  user           User      @relation(fields: [userId], references: [id])
-  userId        String
-  task           Task      @relation(fields: [taskId], references: [id])
-  taskId        String
-  dateCompleted DateTime?
-  challenge      Challenge @relation(fields: [challengeId], references: [id])
-  challengeId   String
-
-  @@index([userId])
-  @@index([challengeId])
+  @@index([userChallengeId])
   @@index([taskId])
 }
+
+model UserChallenge {
+  id                String              @id @default(cuid())
+  user              User                @relation(fields: [userId], references: [id])
+  userId            String
+  challenge         Challenge           @relation(fields: [challengeId], references: [id])
+  challengeId       String
+  dateCompleted     DateTime?
+  isCompleted Boolean?
+  userChallengeTasks UserChallengeTask[]
+
+  @@index([userId])
+  @@index([challengeId])
+}
+
+// model UserTask {
+//   id             String       @id @default(cuid())
+//   user           User      @relation(fields: [userId], references: [id])
+//   userId        String
+//   task           Task      @relation(fields: [taskId], references: [id])
+//   taskId        String
+//   dateCompleted DateTime?
+//   challenge      Challenge @relation(fields: [challengeId], references: [id])
+//   challengeId   String
+
+//   @@index([userId])
+//   @@index([challengeId])
+//   @@index([taskId])
+// }

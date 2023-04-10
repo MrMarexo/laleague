@@ -38,28 +38,43 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    async signIn({ user }) {
+      const existingUserChallenge = await prisma.userChallenge.findFirst({
+        where: { userId: user.id },
+      });
 
-        const existingUserChallenge = await prisma.userChallenge.findFirst({
-          where: { userId: user.id },
+      if (!existingUserChallenge) {
+        // If the user doesn't have any UserChallenges, create a new one for them
+        const challenge = await prisma.challenge.findFirst({
+          include: { tasks: { select: { id: true } } },
         });
 
-        console.log("EXISTING", existingUserChallenge);
+        if (challenge) {
+          const userChallenge = await prisma.userChallenge.create({
+            data: {
+              user: { connect: { id: user.id } },
+              challenge: { connect: { id: challenge.id } },
+            },
+          });
 
-        if (!existingUserChallenge) {
-          // If the user doesn't have any UserChallenges, create a new one for them
-          const challenge = await prisma.challenge.findFirst();
-          if (challenge) {
-            await prisma.userChallenge.create({
-              data: {
-                user: { connect: { id: user.id } },
-                challenge: { connect: { id: challenge.id } },
-              },
-            });
+          if (challenge.tasks.length > 0) {
+            for (let i = 0; i < challenge.tasks.length; i++) {
+              await prisma.userChallengeTask.create({
+                data: {
+                  userChallenge: { connect: { id: userChallenge.id } },
+                  // @ts-ignore
+                  task: { connect: { id: challenge.tasks[i].id } },
+                },
+              });
+            }
           }
         }
+      }
+      return true;
+    },
+    session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
