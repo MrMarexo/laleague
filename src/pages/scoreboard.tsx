@@ -3,13 +3,13 @@ import { type NextPage } from "next";
 import Layout from "~/components/Layout/Layout";
 
 const USERS = [
-  { name: "Kokot", points: 14 },
-  { name: "Jozo", points: 40 },
-  { name: "Marexander", points: 57 },
-  { name: "Marexo", points: 134 },
-  { name: "Picus", points: 346 },
-  { name: "Kar", points: 438 },
   { name: "Brabus", points: 670 },
+  { name: "Kar", points: 438 },
+  { name: "Picus", points: 346 },
+  { name: "Marexo", points: 134 },
+  { name: "Marexander", points: 57 },
+  { name: "Jozo", points: 40 },
+  { name: "Kokot", points: 14 },
 ];
 
 const calculateRank = (points: number) => {
@@ -42,13 +42,13 @@ const Scoreboard: NextPage = () => {
                   {i + 1 > 3 ? (
                     <p className="font-bold ">{i + 1}</p>
                   ) : (
-                    <p className="font-bold text-red-700">{i + 1}</p>
+                    <p className="font-bold text-pink-700">{i + 1}</p>
                   )}
                   <img
                     width={50}
                     height={50}
                     src={`/img/ranks/${getImgId()}.png`}
-                    alt={`rank${getImgId}-name${user.name}`}
+                    alt={`rank${getImgId()}-name${user.name}`}
                   />
                 </div>
                 <p>{user.name}</p>
