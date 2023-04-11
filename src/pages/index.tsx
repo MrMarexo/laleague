@@ -20,7 +20,7 @@ const LoggedOutForm: React.FC = () => {
 
   return (
     <div className="mb-20 flex flex-col gap-2  rounded-lg border-2 border-black px-4 py-4">
-      {challengeData.tasks.map((task, i) => (
+      {challengeData.tasks.map((task) => (
         <div key={task.id} className="flex flex-row justify-between gap-10">
           <p>{task.title}</p>
           <button
