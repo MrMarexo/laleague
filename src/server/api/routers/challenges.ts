@@ -1,4 +1,3 @@
-import { prisma } from "~/server/db";
 import { z } from "zod";
 
 import {

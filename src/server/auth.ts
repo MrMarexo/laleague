@@ -59,13 +59,15 @@ export const authOptions: NextAuthOptions = {
 
           if (challenge.tasks.length > 0) {
             for (let i = 0; i < challenge.tasks.length; i++) {
-              await prisma.userChallengeTask.create({
-                data: {
-                  userChallenge: { connect: { id: userChallenge.id } },
-                  // @ts-ignore
-                  task: { connect: { id: challenge.tasks[i].id } },
-                },
-              });
+              const curTask = challenge.tasks[i];
+              if (curTask) {
+                await prisma.userChallengeTask.create({
+                  data: {
+                    userChallenge: { connect: { id: userChallenge.id } },
+                    task: { connect: { id: curTask.id } },
+                  },
+                });
+              }
             }
           }
         }
