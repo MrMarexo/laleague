@@ -5,11 +5,38 @@ import { useEffect, useState } from "react";
 import Layout from "~/components/Layout/Layout";
 
 import { api, type RouterOutputs } from "~/utils/api";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import format from "date-fns/format";
 
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
+
+const LoggedOutForm: React.FC = () => {
+  const { data: challengeData } = api.challenges.getCurrentChallenge.useQuery();
+
+  if (!challengeData) {
+    return null;
+  }
+
+  return (
+    <div className="mb-20 flex flex-col gap-2  rounded-lg border-2 border-black px-4 py-4">
+      {challengeData.tasks.map((task, i) => (
+        <div key={task.id} className="flex flex-row justify-between gap-10">
+          <p>{task.title}</p>
+          <button
+            onClick={() => void signIn()}
+            className="duration-400 rounded border border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white"
+          >
+            Complete
+          </button>
+        </div>
+      ))}
+      <div className="mt-5 flex flex-row justify-center">
+        <p className="font-bold">+{challengeData.point || 0}p</p>
+      </div>
+    </div>
+  );
+};
 
 const LoggedInForm: React.FC<{
   setAllCompleted: (isChallengeCompleted: boolean) => void;
@@ -19,7 +46,7 @@ const LoggedInForm: React.FC<{
       enabled: false,
     });
 
-  const { mutateAsync, mutate } = api.challenges.setTaskValues.useMutation();
+  const { mutateAsync } = api.challenges.setTaskValues.useMutation();
 
   const [isChallengeCompleted, setChallengeCompleted] = useState(false);
 
@@ -221,10 +248,10 @@ const Home: NextPage = () => {
             }
           />
         ) : (
-          <p className="my-20">Only for logged in users</p>
+          <LoggedOutForm />
         )}
         <h2 className="mb-4 text-xl">Who completed this challenge already?</h2>
-        <div className="mb-20 flex flex-col gap-4  border-2 border-black px-8 py-4">
+        <div className="mb-20 flex flex-col gap-4 rounded-lg  border-2 border-black px-8 py-4">
           {getUsers()}
         </div>
       </Layout>

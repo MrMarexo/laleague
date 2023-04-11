@@ -120,6 +120,21 @@ export const challengesRouter = createTRPCRouter({
       }
       return taskUpdateRes;
     }),
+  getCurrentChallenge: publicProcedure.query(async ({ ctx }) => {
+    const challengeArr = await ctx.prisma.challenge.findMany({
+      orderBy: { startDate: "desc" },
+      take: 1,
+      select: {
+        id: true,
+        tasks: true,
+        point: true,
+      },
+    });
+    if (!challengeArr.length) {
+      return null;
+    }
+    return challengeArr[0];
+  }),
   getCompletedUsers: publicProcedure.query(async ({ ctx }) => {
     const curentChallenge = await ctx.prisma.challenge.findMany({
       orderBy: { startDate: "desc" },
