@@ -52,18 +52,21 @@ model User {
   challenges              UserChallenge[]
   points                  Int             @default(0)
   placements              Int[]
-  // rank                    Rank            @relation(fields: [rankId], references: [id])
-  // rankId                  String
   curChallengeExtraPoints Int             @default(0)
+  rank Rank? @relation(fields: [rankId], references: [id])
+  rankId Int? 
 
-  // @@index([rankId])
+  @@index([rankId])
 }
 
-// model Rank {
-//   id   String @id @default(cuid())
-//   name String
-//   User User[]
-// }
+model Rank {
+  id   Int @id @default(autoincrement())
+  name String
+  minPoints Int
+  maxPoints Int
+  users User[]
+}
+
 
 model VerificationToken {
   identifier String
@@ -119,10 +122,13 @@ model UserChallenge {
   dateCompleted      DateTime?
   isCompleted        Boolean?
   userChallengeTasks UserChallengeTask[]
+  placement          Int?
 
   @@index([userId])
   @@index([challengeId])
 }
+
+
 
 // model UserTask {
 //   id             String       @id @default(cuid())

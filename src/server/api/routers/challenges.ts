@@ -8,7 +8,13 @@ import {
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
+// import { EventEmitter } from 'events';
+
 export const challengesRouter = createTRPCRouter({
+  // onNewUser: protectedProcedure.subscription(() => {
+  //   console.log()
+  //   return;
+  // }),
   getAllChallenges: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.challenge.findMany({ select: { tasks: true } });
   }),
@@ -131,6 +137,7 @@ export const challengesRouter = createTRPCRouter({
           data: {
             dateCompleted: new Date(),
             isCompleted: true,
+            placement,
             user: {
               update: {
                 points:
@@ -207,6 +214,8 @@ export const challengesRouter = createTRPCRouter({
           id: true,
           points: true,
           name: true,
+          rank: true,
+          placements: true,
         },
       });
       if (!user) {
@@ -216,14 +225,24 @@ export const challengesRouter = createTRPCRouter({
         });
       }
 
-      const completedChallenges = await ctx.prisma.userChallenge.findMany({
+      const numberOfAttendedChallenges = await ctx.prisma.userChallenge.count({
         where: {
           userId: input.userId,
-          isCompleted: true,
-        },
-        select: {
-          id: true,
         },
       });
+
+      const numberOfCompletedChallenges = user.placements.length;
+      const numberOfPodiums = user.placements.filter((p) => p <= 3).length;
+      const numberOfFirst = user.placements.filter((p) => p === 1).length;
+
+      return {
+        id: user.id,
+        name: user.name,
+        rank: user.rank,
+        numberOfCompletedChallenges,
+        numberOfAttendedChallenges,
+        numberOfPodiums,
+        numberOfFirst,
+      };
     }),
 });

@@ -10,6 +10,10 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
+import { PrismaClient } from "@prisma/client";
+
+const prismaClient = new PrismaClient();
+
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -41,12 +45,37 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
     },
   },
   adapter: PrismaAdapter(prisma),
+  events: {
+    async signIn({ user }) {
+      const userDb = await prismaClient.user.findUnique({
+        where: {
+          id: user.id,
+        },
+        select: {
+          rankId: true,
+        },
+      });
+      if (!userDb?.rankId) {
+        await prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            rank: {
+              connect: {
+                id: 1,
+              },
+            },
+          },
+        });
+      }
+    },
+  },
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
