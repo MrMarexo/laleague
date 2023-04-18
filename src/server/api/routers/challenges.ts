@@ -7,6 +7,7 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { type Rank } from "@prisma/client";
 
 // import { EventEmitter } from 'events';
 
@@ -120,18 +121,27 @@ export const challengesRouter = createTRPCRouter({
       const allTasksComplete = userChallenge.userChallengeTasks.every(
         (task) => !!task.taskCompletedAt
       );
-      const completedChallenges = await ctx.prisma.userChallenge.findMany({
-        where: {
-          challengeId: input.userChallengeId,
-          isCompleted: true,
-        },
-      });
-
-      const { extraPoints, placement } = calculatePoints(
-        completedChallenges.length
-      );
 
       if (allTasksComplete) {
+        const completedChallengesCount = await ctx.prisma.userChallenge.count({
+          where: {
+            challengeId: input.userChallengeId,
+            isCompleted: true,
+          },
+        });
+
+        const { extraPoints, placement } = calculatePoints(
+          completedChallengesCount
+        );
+
+        const pointsCalculated =
+          userChallenge.user.points +
+          userChallenge.challenge.point +
+          extraPoints;
+
+        const ranks: Array<{ id: number }> = await ctx.prisma
+          .$queryRaw`SELECT id FROM "Rank" WHERE "maxPoints" >= ${pointsCalculated} AND "minPoints" <= ${pointsCalculated};`;
+
         await ctx.prisma.userChallenge.update({
           where: { id: input.userChallengeId },
           data: {
@@ -140,13 +150,15 @@ export const challengesRouter = createTRPCRouter({
             placement,
             user: {
               update: {
-                points:
-                  userChallenge.user.points +
-                  userChallenge.challenge.point +
-                  extraPoints,
+                points: pointsCalculated,
                 curChallengeExtraPoints: extraPoints,
                 placements: {
                   push: placement,
+                },
+                rank: {
+                  connect: {
+                    id: ranks[0]!.id,
+                  },
                 },
               },
             },
