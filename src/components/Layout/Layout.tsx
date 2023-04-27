@@ -38,7 +38,7 @@ const Layout: ReactFCC = ({ children }) => {
           </button>
         )}
       </div>
-      <div className="container flex flex-col items-center justify-center px-4 py-16 ">
+      <div className="container flex flex-col items-center justify-center px-4 pt-16 ">
         {children}
       </div>
     </main>

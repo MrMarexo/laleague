@@ -255,6 +255,7 @@ export const challengesRouter = createTRPCRouter({
         numberOfAttendedChallenges,
         numberOfPodiums,
         numberOfFirst,
+        points: user.points,
       };
     }),
 });
