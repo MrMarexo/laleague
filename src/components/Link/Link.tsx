@@ -8,11 +8,8 @@ interface ILinkProps {
 
 const Link: ReactFCC<ILinkProps> = ({ children, href }) => {
   return (
-    <NextLink
-      href={href}
-      className="transition duration-300 hover:text-pink-700"
-    >
-      {children}
+    <NextLink href={href} className="effect-container">
+      <span className="effect"> {children} </span>
     </NextLink>
   );
 };

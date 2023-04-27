@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 
-import Layout from "~/components/Layout/Layout";
+import Layout from "~/components/Layout";
 
 import { api, type RouterOutputs } from "~/utils/api";
 import { signIn, useSession } from "next-auth/react";
@@ -19,13 +19,13 @@ const LoggedOutForm: React.FC = () => {
   }
 
   return (
-    <div className="mb-20 flex flex-col gap-2  rounded-lg border-2 border-black px-4 py-4">
+    <div className="mb-20 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
       {challengeData.tasks.map((task) => (
         <div key={task.id} className="flex flex-row justify-between gap-10">
           <p>{task.title}</p>
           <button
             onClick={() => void signIn()}
-            className="duration-400 rounded border border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white"
+            className="duration-400 rounded border border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white dark:border-white"
           >
             Complete
           </button>
@@ -115,7 +115,7 @@ const LoggedInForm: React.FC<{
   }
 
   return (
-    <div className="mb-20 flex flex-col gap-2  rounded-lg border-2 border-black px-4 py-4">
+    <div className="mb-20 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
       {challengeData.userChallengeTasks.map((task, i) => (
         <div key={task.id} className="flex flex-row justify-between gap-10">
           <p>{task.task.title}</p>
@@ -141,7 +141,7 @@ const LoggedInForm: React.FC<{
           ) : (
             <button
               onClick={() => handleButton(task.id, challengeData)}
-              className="duration-400 rounded border border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white"
+              className="duration-400 rounded border  border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white dark:border-white"
             >
               Complete
             </button>
@@ -237,9 +237,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <h1 className="mb-20 mt-20 text-8xl font-extrabold tracking-tight">
-          League
-        </h1>
+        <div className="effect-container">
+          <h1 className="effect font-league dark:text my-12 text-7xl md:text-9xl">
+            Le<span className="pl-1">a</span>gue
+          </h1>
+        </div>
         <h2 className="mb-4 text-xl">Current challenge</h2>
         {sessionData ? (
           <LoggedInForm
@@ -250,8 +252,10 @@ const Home: NextPage = () => {
         ) : (
           <LoggedOutForm />
         )}
-        <h2 className="mb-4 text-xl">Who completed this challenge already?</h2>
-        <div className="mb-20 flex flex-col gap-4 rounded-lg  border-2 border-black px-8 py-4">
+        <h2 className="mb-4 text-center text-xl">
+          Who completed this challenge already?
+        </h2>
+        <div className="mb-20 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           {getUsers()}
         </div>
       </Layout>

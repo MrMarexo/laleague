@@ -1,6 +1,6 @@
 import React from "react";
 import { type NextPage } from "next";
-import Layout from "~/components/Layout/Layout";
+import Layout from "~/components/Layout";
 
 const USERS = [
   { name: "Brabus", points: 670 },
@@ -22,7 +22,7 @@ const calculateRank = (points: number) => {
 const Scoreboard: NextPage = () => {
   return (
     <Layout>
-      <div className="w-50 flex flex-col gap-3 rounded-lg border-2 border-black px-4 py-2">
+      <div className="w-50 flex flex-col gap-3 rounded-lg border-2 border-black px-4   py-2 dark:border-gray-400">
         {USERS.map((user, i) => {
           const getImgId = () => {
             const rank = calculateRank(user.points);
@@ -54,7 +54,9 @@ const Scoreboard: NextPage = () => {
                 <p>{user.name}</p>
                 <p className="font-bold">{user.points.toString() + "p"}</p>
               </div>
-              {i !== USERS.length - 1 && <div className="border-b-2" />}
+              {i !== USERS.length - 1 && (
+                <div className="border-b-2 border-gray-200 dark:border-black" />
+              )}
             </>
           );
         })}
