@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input:checked + div svg {
+  @apply block;
+}
+
+.effect-container {
+  position: relative;
+  display: inline-block;
+}
+
+.effect {
+  box-sizing: content-box;
+  border: none;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-rendering: optimizeLegibility;
+  text-overflow: clip;
+  transition: text-shadow 0.3s ease;
+}
+
+.effect-container:hover .effect{
+  text-shadow: calc(-.05rem - .04em)0 .1rem rgb(30,242,241), calc(.05rem + .04em) 0 .1rem rgb(246,5,10);
+}
+
+
