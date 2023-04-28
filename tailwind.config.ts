@@ -1,20 +1,21 @@
 /** @type {import('tailwindcss').Config} */
+import { type Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
         sans: ["Prompt", ...defaultTheme.fontFamily.sans],
-        league: ['Bowlby One SC', 'sans'],
+        league: ["Bowlby One SC", "sans"],
       },
       backgroundColor: {
-        'black-800': '#141414',
+        "black-800": "#141414",
       },
       colors: {
-        "text-league-gray-800": '#e5e5e6',
+        "text-league-gray-800": "#e5e5e6",
       },
     },
   },

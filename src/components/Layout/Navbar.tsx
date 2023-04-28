@@ -48,11 +48,11 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
           id="sidebar"
           className={`${
             isNavOpen
-              ? "dark:bg-black-800 fixed top-0 right-0 z-0 h-full w-64 bg-white p-5 shadow-lg md:p-0"
+              ? "fixed right-0 top-0 z-0 h-full w-64 bg-white p-5 shadow-lg dark:bg-black-800 md:p-0"
               : "z-0 hidden flex-row gap-5 md:static md:flex md:gap-8 md:bg-transparent md:shadow-none md:dark:bg-transparent"
           } z-0 flex-row gap-5 md:static md:flex md:gap-8 md:bg-transparent md:shadow-none md:dark:bg-transparent`}
         >
-          <nav className="top-0 flex flex-col items-start space-y-4 text-lg md:flex-row md:gap-5 md:gap-8 md:space-y-0">
+          <nav className="top-0 flex flex-col items-start space-y-4 text-lg md:flex-row md:gap-5 md:space-y-0">
             <Link href="/results" className="effect">
               My&nbsp;results
             </Link>
@@ -62,7 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
               onClick={onThemeToggle}
             >
               <span className="h-6 w-6 rounded-full text-base text-black dark:text-white">
-              {isDark ? "☼" : "☾"}
+                {isDark ? "☼" : "☾"}
               </span>
             </button>
           </nav>

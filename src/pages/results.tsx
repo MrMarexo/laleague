@@ -2,10 +2,10 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
 import React from "react";
-import { Check } from "~/components/Icons/Check";
-import { Hand } from "~/components/Icons/Hand";
-import { Podium } from "~/components/Icons/Podium";
-import { Medal } from "~/components/Icons/Medal";
+// import { Check } from "~/components/Icons/Check";
+// import { Hand } from "~/components/Icons/Hand";
+// import { Podium } from "~/components/Icons/Podium";
+// import { Medal } from "~/components/Icons/Medal";
 import { api } from "~/utils/api";
 
 // const getImgId = (rank: number) => {
@@ -111,35 +111,42 @@ const UserResults: React.FC<{ session: Session }> = ({ session }) => {
 
   return (
     <>
-  <section className="my-10 flex flex-col items-center justify-center">
-  <div className="effect-container z-0 my-10">
-    <h1 className="effect font-league my-4 text-center text-5xl">
-      {mockData.user.name}
-    </h1>
-  </div>
-  <div className="block flex-row gap-20 md:flex">
-    <aside className="block flex flex-col items-center justify-center text-center">
-      <div className="flex flex-col items-center justify-center">
-        <Image width={250} height={250} src="/img/ranks/25.png" />
-        <p className="font-league text-league-gray-800 absolute text-7xl">13</p>
-      </div>
-      <p className="effect my-4 text-3xl">rank</p>
-    </aside>
+      <section className="my-10 flex flex-col items-center justify-center">
+        <div className="effect-container z-0 my-10">
+          <h1 className="effect my-4 text-center font-league text-5xl">
+            {profileData?.name}
+          </h1>
+        </div>
+        <div className="block flex-row gap-20 md:flex">
+          <aside className="flex flex-col items-center justify-center text-center">
+            <div className="flex flex-col items-center justify-center">
+              <Image
+                width={250}
+                height={250}
+                src="/img/ranks/25.png"
+                alt="whatevs"
+              />
+              <p className="text-league-gray-800 absolute font-league text-7xl">
+                13
+              </p>
+            </div>
+            <p className="effect my-4 text-3xl">rank</p>
+          </aside>
 
-    <ul className="mt-10 space-y-2 text-center md:mt-5 md:text-left">
-      {stats.map((stat) => (
-        <li
-          key={stat.label}
-          className="mx-auto flex flex-row items-center gap-2 md:text-left"
-        >
-          <Image width={50} height={50} src={stat.imgSrc} />
-          {stat.label}: {stat.value}
-        </li>
-      ))}
-      <li className="py-5 text-2xl">65p</li>
-    </ul>
-  </div>
-</section>;
+          <ul className="mt-10 space-y-2 text-center md:mt-5 md:text-left">
+            {stats.map((stat) => (
+              <li
+                key={stat.label}
+                className="mx-auto flex flex-row items-center gap-2 md:text-left"
+              >
+                <Image width={50} height={50} src={stat.imgSrc} alt="whatevs" />
+                {stat.label}: {stat.value}
+              </li>
+            ))}
+            <li className="py-5 text-2xl">65p</li>
+          </ul>
+        </div>
+      </section>
     </>
   );
 };
