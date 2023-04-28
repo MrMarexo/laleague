@@ -4,16 +4,16 @@ import NextLink from "next/link";
 
 interface ILinkProps {
   href: string;
+  className?: string;
 }
 
-const Link: ReactFCC<ILinkProps> = ({ children, href }) => {
+const Link: ReactFCC<ILinkProps> = ({ children, href, className = "" }) => {
   return (
-    <NextLink
-      href={href}
-      className="transition duration-300 hover:text-pink-700"
-    >
-      {children}
-    </NextLink>
+    <div className={className}>
+      <NextLink href={href} className="effect-container">
+        <span className="effect"> {children} </span>
+      </NextLink>
+    </div>
   );
 };
 
