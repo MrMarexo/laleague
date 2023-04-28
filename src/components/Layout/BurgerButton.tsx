@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
-const BurgerButton = ({ onToggle }) => {
+type BurgerButtonProps = {
+  onToggle: (isOpen: boolean) => void;
+};
+
+const BurgerButton: React.FC<BurgerButtonProps> = ({ onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
