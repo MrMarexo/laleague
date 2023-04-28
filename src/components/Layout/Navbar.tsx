@@ -5,9 +5,10 @@ import BurgerButton from "./BurgerButton";
 
 type NavbarProps = {
   onThemeToggle: () => void;
+  isDark: boolean;
 };
 
-const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
+const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
   const { data } = useSession();
   const emojis = ["⚔️", "🔪", "💪", "🏆", "🏅", "🥈", "🍆"];
 
@@ -61,7 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
               onClick={onThemeToggle}
             >
               <span className="h-6 w-6 rounded-full text-base text-black dark:text-white">
-                {data?.theme === "dark" ? "☼" : "☾"}
+              {isDark ? "☼" : "☾"}
               </span>
             </button>
           </nav>

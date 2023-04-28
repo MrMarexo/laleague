@@ -7,6 +7,12 @@ import Layout from "~/components/Layout";
 import { api, type RouterOutputs } from "~/utils/api";
 import { signIn, useSession } from "next-auth/react";
 import format from "date-fns/format";
+import { LargePodium } from "~/components/Icons/LargePodium";
+import { Pullup } from "~/components/Icons/Pullup";
+import { Swim } from "~/components/Icons/Swim";
+import { Pushup } from "~/components/Icons/Pushup";
+import { Run } from "~/components/Icons/Run";
+import { Boxer } from "~/components/Icons/Boxer";
 
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
@@ -237,8 +243,22 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
+        {/* <h1 className="mb-16 mt-8 text-8xl font-extrabold tracking-tight">
+           League
+         </h1>
+         <div className="absolute right-10">
+           <Boxer />
+         </div>
+         <div className="absolute left-10 rotate-180">
+           <Boxer />
+         </div>
+         <div className="absolute left-1/2 top-1/3 -translate-x-60 -translate-y-40">
+           <Run />
+         </div>
+         <div className="absolute left-1/2 top-1/2 -translate-y-60 translate-x-40">
+           <Pullup /> */}
         <div className="effect-container">
-          <h1 className="effect font-league dark:text my-12 text-7xl md:text-9xl">
+          <h1 className="effect dark:text my-12 font-league text-7xl md:text-9xl">
             Le<span className="pl-1">a</span>gue
           </h1>
         </div>
@@ -252,11 +272,24 @@ const Home: NextPage = () => {
         ) : (
           <LoggedOutForm />
         )}
+        {/* <div className="absolute left-1/2 top-1/2 -translate-x-32 translate-y-2">
+           <Pushup />
+         </div>
+         <h2 className="mb-4 mt-4 text-xl">
+           Who completed this challenge already?
+         </h2>
+         <div className="flex flex-col gap-4 rounded-lg  border-2 border-black px-8 py-4">
+           <div className="flex flex-row justify-center">
+             <LargePodium />
+           </div> */}
         <h2 className="mb-4 text-center text-xl">
           Who completed this challenge already?
         </h2>
         <div className="mb-20 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           {getUsers()}
+        </div>
+        <div className="flex w-80 flex-row justify-end">
+          <Swim />
         </div>
       </Layout>
     </>
