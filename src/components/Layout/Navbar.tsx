@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
 
   return (
     <div className="position: fixed my-2 flex w-full flex-row justify-between px-5 md:px-20">
-      <nav className="flex flex-row gap-5 text-lg md:gap-8">
+      <nav className="flex flex-row items-center gap-5 text-lg md:gap-8">
         <Link href="/">
           {emojis.map((emoji, index) => (
             <span
@@ -68,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
           </nav>
         </section>
       </nav>
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row items-center gap-2 md:text-lg">
         {data?.user?.name ? (
           <>
             <div>
@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
             </div>
             <div>|</div>
             <button
-              className="text-base text-black transition duration-300 hover:text-pink-700 md:text-lg"
+              className="text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
               onClick={() => void signOut()}
             >
               Sign out
@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
           </>
         ) : (
           <button
-            className="text-base text-black text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
+            className="text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
             onClick={() => void signIn()}
           >
             Sign in

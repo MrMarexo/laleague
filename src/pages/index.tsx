@@ -13,6 +13,29 @@ import { Swim } from "~/components/Icons/Swim";
 import { Pushup } from "~/components/Icons/Pushup";
 import { Run } from "~/components/Icons/Run";
 import { Boxer } from "~/components/Icons/Boxer";
+import { useTheme } from "next-themes";
+
+const DoneCircle = () => {
+  const { theme } = useTheme();
+
+  return (
+    <svg
+      fill={theme === "dark" ? "#fff" : "#000"}
+      width="15px"
+      height="15px"
+      viewBox="0 0 24 24"
+      id="d9090658-f907-4d85-8bc1-743b70378e93"
+      data-name="Livello 1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        id="70fa6808-131f-4233-9c3a-fc089fd0c1c4"
+        data-name="done circle"
+        d="M12,0A12,12,0,1,0,24,12,12,12,0,0,0,12,0ZM11.52,17L6,12.79l1.83-2.37L11.14,13l4.51-5.08,2.24,2Z"
+      />
+    </svg>
+  );
+};
 
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
@@ -127,21 +150,7 @@ const LoggedInForm: React.FC<{
           <p>{task.task.title}</p>
           {tasksState?.find((state) => state.id === task.id)?.isCompleted ? (
             <div className="flex flex-row items-center gap-1">
-              <svg
-                fill="#000000"
-                width="15px"
-                height="15px"
-                viewBox="0 0 24 24"
-                id="d9090658-f907-4d85-8bc1-743b70378e93"
-                data-name="Livello 1"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  id="70fa6808-131f-4233-9c3a-fc089fd0c1c4"
-                  data-name="done circle"
-                  d="M12,0A12,12,0,1,0,24,12,12,12,0,0,0,12,0ZM11.52,17L6,12.79l1.83-2.37L11.14,13l4.51-5.08,2.24,2Z"
-                />
-              </svg>
+              <DoneCircle />
               <p className="text-sm font-bold">Done</p>
             </div>
           ) : (
@@ -157,21 +166,7 @@ const LoggedInForm: React.FC<{
       <div className="mt-5 flex flex-row justify-center">
         {isChallengeCompleted ? (
           <div className="flex flex-row items-center gap-1 text-sm font-bold">
-            <svg
-              fill="#000000"
-              width="20px"
-              height="20px"
-              viewBox="0 0 24 24"
-              id="d9090658-f907-4d85-8bc1-743b70378e93"
-              data-name="Livello 1"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                id="70fa6808-131f-4233-9c3a-fc089fd0c1c4"
-                data-name="done circle"
-                d="M12,0A12,12,0,1,0,24,12,12,12,0,0,0,12,0ZM11.52,17L6,12.79l1.83-2.37L11.14,13l4.51-5.08,2.24,2Z"
-              />
-            </svg>
+            <DoneCircle />
             Challenge completed
           </div>
         ) : (
@@ -186,12 +181,18 @@ const Home: NextPage = () => {
   const { data: sessionData } = useSession();
 
   const [isChallengeComplete, setIsChallengeComplete] = useState(false);
-  const { data: completedUsersData } =
-    api.challenges.getCompletedUsers.useQuery();
+  const { refetch, data: completedUsersData } =
+    api.challenges.getCompletedUsers.useQuery(undefined, {
+      enabled: false,
+    });
+
+  useEffect(() => {
+    void refetch();
+  }, []);
 
   useEffect(() => {
     if (isChallengeComplete) {
-      console.log("RUN QUERY");
+      void refetch();
     }
   }, [isChallengeComplete]);
 
@@ -286,11 +287,14 @@ const Home: NextPage = () => {
           Who completed this challenge already?
         </h2>
         <div className="mb-20 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
+          <div className="flex flex-row justify-center">
+            <LargePodium />
+          </div>
           {getUsers()}
         </div>
-        <div className="flex w-80 flex-row justify-end">
+        {/* <div className="flex w-80 flex-row justify-end">
           <Swim />
-        </div>
+        </div> */}
       </Layout>
     </>
   );
