@@ -88,22 +88,27 @@ const UserResults: React.FC<{ session: Session }> = ({ session }) => {
 
   const stats = [
     {
-      imgSrc: "/img/ranks/10.png",
+      imgSrc: "/img/results/35.png",
       label: "Challenges attended",
       value: profileData?.numberOfAttendedChallenges,
     },
     {
-      imgSrc: "/img/ranks/22.png",
+      imgSrc: "/img/results/34.png",
       label: "Challenges completed",
       value: profileData?.numberOfCompletedChallenges,
     },
     {
-      imgSrc: "/img/ranks/12.png",
+      imgSrc: "/img/results/33.png",
+      label: "Tasks completed",
+      value: profileData?.numberOfCompletedChallenges,
+    },
+    {
+      imgSrc: "/img/results/36.png",
       label: "Podiums",
       value: profileData?.numberOfPodiums,
     },
     {
-      imgSrc: "/img/ranks/05.png",
+      imgSrc: "/img/results/31.png",
       label: "First places",
       value: profileData?.numberOfFirst,
     },
@@ -121,9 +126,9 @@ const UserResults: React.FC<{ session: Session }> = ({ session }) => {
           <aside className="flex flex-col items-center justify-center text-center">
             <div className="flex flex-col items-center justify-center">
               <Image
-                width={250}
-                height={250}
-                src="/img/ranks/25.png"
+                width={300}
+                height={300}
+                src="/img/results/38.png"
                 alt="whatevs"
               />
               <p className="text-league-gray-800 absolute font-league text-7xl">
@@ -167,7 +172,7 @@ const Results: NextPage = () => {
         </>
       ) : (
         <button
-          className="text-base text-black text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
+          className="text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
           onClick={() => void signIn()}
         >
           Log in
