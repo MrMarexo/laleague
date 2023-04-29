@@ -7,7 +7,6 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { type Rank } from "@prisma/client";
 
 // import { EventEmitter } from 'events';
 
@@ -16,13 +15,34 @@ export const challengesRouter = createTRPCRouter({
   //   console.log()
   //   return;
   // }),
+
   getAllChallenges: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.challenge.findMany({ select: { tasks: true } });
   }),
   getTasksFromLastChallenge: protectedProcedure.query(async ({ ctx }) => {
-    const getArray = async () => {
-      return await ctx.prisma.userChallenge.findMany({
-        where: { userId: ctx.session.user.id },
+    const currentDate = new Date();
+    const currentChallenge = await ctx.prisma.challenge.findFirst({
+      where: {
+        startDate: { lte: currentDate },
+        endDate: { gte: currentDate },
+      },
+      select: {
+        id: true,
+        tasks: true,
+      },
+    });
+    if (!currentChallenge) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: `CURRENTCHALLENGE NOT FOUND`,
+      });
+    }
+    const getUserChallenge = async () => {
+      return await ctx.prisma.userChallenge.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          challengeId: currentChallenge.id,
+        },
         orderBy: { id: "desc" },
         take: 1,
         select: {
@@ -40,39 +60,33 @@ export const challengesRouter = createTRPCRouter({
         },
       });
     };
-    const arr = await getArray();
+    const curUserChallenge = await getUserChallenge();
 
-    if (arr.length === 0) {
-      const challenge = await ctx.prisma.challenge.findFirst({
-        include: { tasks: { select: { id: true } } },
+    if (!curUserChallenge) {
+      const userChallenge = await ctx.prisma.userChallenge.create({
+        data: {
+          user: { connect: { id: ctx.session.user.id } },
+          challenge: { connect: { id: currentChallenge.id } },
+        },
       });
-
-      if (challenge) {
-        const userChallenge = await ctx.prisma.userChallenge.create({
-          data: {
-            user: { connect: { id: ctx.session.user.id } },
-            challenge: { connect: { id: challenge.id } },
-          },
-        });
-        if (challenge.tasks.length > 0) {
-          for (let i = 0; i < challenge.tasks.length; i++) {
-            const curTask = challenge.tasks[i];
-            if (curTask) {
-              await ctx.prisma.userChallengeTask.create({
-                data: {
-                  userChallenge: { connect: { id: userChallenge.id } },
-                  task: { connect: { id: curTask.id } },
-                },
-              });
-            }
+      if (currentChallenge.tasks.length > 0) {
+        for (let i = 0; i < currentChallenge.tasks.length; i++) {
+          const curTask = currentChallenge.tasks[i];
+          if (curTask) {
+            await ctx.prisma.userChallengeTask.create({
+              data: {
+                userChallenge: { connect: { id: userChallenge.id } },
+                task: { connect: { id: curTask.id } },
+              },
+            });
           }
         }
-
-        const newArr = await getArray();
-        return newArr[0];
       }
+
+      const newChallenge = await getUserChallenge();
+      return newChallenge;
     }
-    return arr[0];
+    return curUserChallenge;
   }),
   setTaskValues: protectedProcedure
     .input(
@@ -168,30 +182,31 @@ export const challengesRouter = createTRPCRouter({
       return taskUpdateRes;
     }),
   getCurrentChallenge: publicProcedure.query(async ({ ctx }) => {
-    const challengeArr = await ctx.prisma.challenge.findMany({
-      orderBy: { startDate: "desc" },
-      take: 1,
+    const currentDate = new Date();
+    return await ctx.prisma.challenge.findFirst({
+      where: {
+        startDate: { lte: currentDate },
+        endDate: { gte: currentDate },
+      },
       select: {
         id: true,
         tasks: true,
         point: true,
       },
     });
-    if (!challengeArr.length) {
-      return null;
-    }
-    return challengeArr[0];
   }),
-
   getCompletedUsers: publicProcedure.query(async ({ ctx }) => {
-    const curentChallenge = await ctx.prisma.challenge.findMany({
-      orderBy: { startDate: "desc" },
-      take: 1,
+    const currentDate = new Date();
+    const curentChallenge = await ctx.prisma.challenge.findFirst({
+      where: {
+        startDate: { lte: currentDate },
+        endDate: { gte: currentDate },
+      },
       select: {
         id: true,
       },
     });
-    const curChallengeId = curentChallenge[0]?.id;
+    const curChallengeId = curentChallenge?.id;
     if (!curChallengeId) {
       throw new TRPCError({
         code: "NOT_FOUND",
