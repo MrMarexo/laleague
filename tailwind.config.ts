@@ -15,7 +15,7 @@ export default {
         "black-800": "#141414",
       },
       colors: {
-        "text-league-gray-800": "#e5e5e6",
+        "league-gray-800": "#383838",
       },
     },
   },

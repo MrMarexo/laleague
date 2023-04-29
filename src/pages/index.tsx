@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import Layout from "~/components/Layout";
@@ -288,7 +289,8 @@ const Home: NextPage = () => {
         </h2>
         <div className="mb-20 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           <div className="flex flex-row justify-center">
-            <LargePodium />
+          <Image src="/img/podium.png" alt="podium" width={100} height={150} />
+         {/* <LargePodium /> */} 
           </div>
           {getUsers()}
         </div>
