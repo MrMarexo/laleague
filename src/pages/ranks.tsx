@@ -57,7 +57,7 @@ const UserRanks: React.FC = () => {
             <Image
               width={200}
               height={200}
-              src="/img/results/6angle.png"
+              src="/img/ranks/01.png"
               alt="next-rank"
             />
             <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-gray-700">
