@@ -4,9 +4,13 @@ import Layout from "~/components/Layout";
 import Image from "next/image";
 import { api } from "~/utils/api";
 import { getImgIdFromRankId } from "~/utils/fns";
+import Link from "~/components/Link/Link";
+import { useSession } from "next-auth/react";
 
 const Scoreboard: NextPage = () => {
   const { data } = api.challenges.getLeaderboard.useQuery();
+
+  const { data: sessionData } = useSession();
 
   return (
     <Layout>
@@ -15,18 +19,19 @@ const Scoreboard: NextPage = () => {
         {data &&
           data.map((user, i) => {
             const imgId = getImgIdFromRankId(user.rankId || 1);
+            const isMe = sessionData && sessionData.user.id === user.id;
             return (
               <>
                 <div
-                  key={i}
+                  key={user.id}
                   className="flex flex-row items-center justify-between gap-10"
                 >
                   <div className="flex flex-row items-center gap-4">
-                    <div className="effect-always-container w-3">
+                    <div className="w-3">
                       {i + 1 > 3 ? (
-                        <p className="font-bold">{i + 1}</p>
+                        <p>{i + 1}</p>
                       ) : (
-                        <p className="effect font-bold">{i + 1}</p>
+                        <p className="font-bold">{i + 1}</p>
                       )}
                     </div>
                     <Image
@@ -36,7 +41,13 @@ const Scoreboard: NextPage = () => {
                       alt={`rank${imgId}-name${user.name || ""}`}
                     />
                   </div>
-                  <p>{user.name}</p>
+                  {isMe ? (
+                    <b>
+                      <Link href="/results">{user.name}</Link>
+                    </b>
+                  ) : (
+                    <Link href={`/results/${user.id}`}>{user.name}</Link>
+                  )}
                   <p className="font-bold">{user.points.toString() + "p"}</p>
                 </div>
                 {i !== data.length - 1 && (

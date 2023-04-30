@@ -9,6 +9,7 @@ import { api, type RouterOutputs } from "~/utils/api";
 import { signIn, useSession } from "next-auth/react";
 import format from "date-fns/format";
 import { DoneCircle } from "~/components/Icons/DoneCircle";
+import Link from "~/components/Link/Link";
 
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
@@ -207,13 +208,20 @@ const Home: NextPage = () => {
     if (completedUsersData) {
       const userItems = completedUsersData.map(
         ({ user, dateCompleted }, index) => {
+          const isMe = sessionData && sessionData.user.id === user.id;
           return (
             <div key={index} className="flex flex-row justify-between gap-6">
               <p className="font-bold">1st</p>
-              <p>{`${user.name || "User"} - ${format(
-                dateCompleted!,
-                "PP kk:mm"
-              )}`}</p>
+              <p>
+                {isMe ? (
+                  <i>
+                    <Link href="/results">{user.name}</Link>
+                  </i>
+                ) : (
+                  <Link href={`/results/${user.id}`}>{user.name}</Link>
+                )}{" "}
+                - {format(dateCompleted!, "PP kk:mm")}
+              </p>
               <p className="font-bold">+3p</p>
             </div>
           );

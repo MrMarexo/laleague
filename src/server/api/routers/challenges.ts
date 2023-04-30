@@ -268,6 +268,7 @@ export const challengesRouter = createTRPCRouter({
         user: {
           select: {
             name: true,
+            id: true,
           },
         },
       },
@@ -283,6 +284,7 @@ export const challengesRouter = createTRPCRouter({
         name: true,
         rankId: true,
         points: true,
+        id: true,
       },
     });
   }),

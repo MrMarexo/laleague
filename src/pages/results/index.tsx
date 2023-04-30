@@ -6,12 +6,11 @@ import { api } from "~/utils/api";
 
 import Layout from "~/components/Layout";
 import { ChallengeList } from "~/components/ChallengeList";
-import { type Session } from "next-auth";
 import { getImgIdFromRankId } from "~/utils/fns";
 
-const UserResults: React.FC<{ session: Session }> = ({ session }) => {
+export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
   const { data: profileData } = api.challenges.getUserResults.useQuery({
-    userId: session.user.id,
+    userId,
   });
 
   const imgId = getImgIdFromRankId(profileData?.rank?.id || 1);
@@ -90,7 +89,7 @@ const Results: NextPage = () => {
     <Layout>
       {sessionData ? (
         <>
-          <UserResults session={sessionData} />
+          <UserResults userId={sessionData.user.id} />
           <ChallengeList />
         </>
       ) : (
