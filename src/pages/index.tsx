@@ -269,7 +269,7 @@ const Home: NextPage = () => {
         <h2 className="mb-4 text-center text-xl">
           Who completed this challenge already?
         </h2>
-        <div className="flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 mb-20 dark:border-white">
+        <div className="mb-10 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           <div className="flex flex-row justify-center">
             <Image
               src="/img/podium.png"
