@@ -22,11 +22,11 @@ const Layout: ReactFCC<{ isFlexOff?: boolean; isWithBoxers?: boolean }> = ({
 
       {isWithBoxers === true ? (
         <>
-          <div className="position absolute mt-20 hidden w-screen pt-10 md:block">
+          <div className="position absolute z-0 mt-20 hidden w-screen pt-10 md:block">
             <div className="absolute"></div>
             <BoxerBlue />
           </div>
-          <div className="position absolute mt-20 hidden w-screen pt-10 md:block">
+          <div className="position absolute z-0 mt-20 hidden w-screen pt-10 md:block">
             <div className="absolute right-0">
               <BoxerRed />
             </div>
@@ -39,7 +39,7 @@ const Layout: ReactFCC<{ isFlexOff?: boolean; isWithBoxers?: boolean }> = ({
       <div
         className={`container ${
           isFlexOff ? "" : "flex flex-col items-center"
-        } min-h-screen px-4 pb-5 pt-16`}
+        } z-10 min-h-screen px-4 pb-5 pt-16`}
       >
         {children}
       </div>
