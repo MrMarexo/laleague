@@ -60,6 +60,15 @@ const Scoreboard: NextPage = () => {
           <div className="h-20 w-60" />
         )}
       </div>
+      <div className="mt-20 px-2 md:w-1/3">
+        <p className="text-center italic">
+          If you&apos;re going to try, go all the way. There is no other feeling
+          like that. You will be alone with the gods, and the nights will flame
+          with fire. You will ride life straight to perfect laughter. It&apos;s
+          the only good fight there is.
+        </p>
+        <p className="mt-4 text-center text-xl font-bold">Charles Bukowski</p>
+      </div>
     </Layout>
   );
 };
