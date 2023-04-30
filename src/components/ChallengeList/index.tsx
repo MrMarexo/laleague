@@ -1,41 +1,87 @@
 import React from "react";
-import { data } from "./data";
+import { api } from "~/utils/api";
+import { format } from "date-fns";
+import { DoneCircle } from "../Icons/DoneCircle";
+
+const getNumberString = (position: number) => {
+  if (position === 1) {
+    return "1st";
+  }
+  if (position === 2) {
+    return "2nd";
+  }
+  if (position === 3) {
+    return "3rd";
+  }
+  return `${position}th`;
+};
 
 export const ChallengeList: React.FC = () => {
+  const { data: challenges } =
+    api.challenges.getMyPreviousChallenges.useQuery();
+
+  const heading = <h2 className="mt-10 text-2xl">My previous challenges</h2>;
+
+  if (!challenges || challenges?.length === 0) {
+    return (
+      <>
+        {heading}
+        <p className="mt-4">It&apos;s my first now...</p>
+      </>
+    );
+  }
+
   return (
-    <section className="my-10 grid grid-cols-1 gap-y-6 gap-x-5 dark:text-white md:grid-cols-2 lg:grid-cols-3">
-      {data.map(({ title, points, tasks, winner, winnerPoints }) => (
-        <article
-          className="flex flex-col justify-between space-y-3 rounded-lg border-2 border-black p-4 dark:border-gray-400"
-          key={title}
-        >
-          <h3 className="font-bold">{title}</h3>
-
-          <span className="flex items-center justify-between">
-            <p>Won:</p>
-            <span className="flex items-center justify-between">
-              🏆 {winner} {winnerPoints}
-            </span>
-          </span>
-
-          <ul>
-            {tasks.map(({ task }, index: number) => (
-              <li className="text-gray-400" key={task}>
-                {index + 1}. {task}
-              </li>
-            ))}
-          </ul>
-          <span className="flex items-center justify-between">
-            <p>Your points: {points}</p>
-            <button
-              onClick={() => alert("Challenged!")}
-              className="duration-400 rounded border border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white dark:border-white"
+    <>
+      {heading}
+      <section className="my-4 grid grid-cols-1 gap-x-5 gap-y-6 dark:text-white md:grid-cols-2 lg:grid-cols-3">
+        {challenges.map(
+          ({
+            placement,
+            challenge: { endDate, title },
+            userChallengeTasks,
+          }) => (
+            <article
+              className="flex flex-col justify-between space-y-3 rounded-lg border-2 border-black p-4 dark:border-gray-400"
+              key={title}
             >
-              Challenge Winner
-            </button>
-          </span>
-        </article>
-      ))}
-    </section>
+              <h3 className="font-bold">{title}</h3>
+
+              <ul>
+                {userChallengeTasks.map(
+                  ({ task, taskCompletedAt }, index: number) => (
+                    <li
+                      className={
+                        !!taskCompletedAt ? "text-black-800" : "text-gray-400"
+                      }
+                      key={index}
+                    >
+                      {index + 1}. {task.title}
+                    </li>
+                  )
+                )}
+              </ul>
+              <span className="flex flex-row">
+                <p className="mr-6">Ended: </p>
+                {format(endDate, "PP kk:mm")}
+              </span>
+              <span className="flex items-center justify-between">
+                {!!placement ? (
+                  <>
+                    <div className="flex flex-row items-center gap-1">
+                      <DoneCircle />
+                      <p className="text-sm font-bold">Done</p>
+                    </div>
+                    <p className="font-bold">{getNumberString(placement)}</p>
+                  </>
+                ) : (
+                  <p className="font-bold">Not completed</p>
+                )}
+              </span>
+            </article>
+          )
+        )}
+      </section>
+    </>
   );
 };

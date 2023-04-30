@@ -1,19 +1,24 @@
 import React from "react";
 import { type ReactFCC } from "~/types/types";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 interface ILinkProps {
   href: string;
-  className?: string;
 }
 
-const Link: ReactFCC<ILinkProps> = ({ children, href, className = "" }) => {
+const Link: ReactFCC<ILinkProps> = ({ children, href }) => {
+  const { pathname } = useRouter();
+
   return (
-    <div className={className}>
-      <NextLink href={href} className="effect-container">
-        <span className="effect"> {children} </span>
-      </NextLink>
-    </div>
+    <NextLink
+      href={href}
+      className={
+        pathname === href ? "effect-always-container" : "effect-container"
+      }
+    >
+      <span className="effect"> {children} </span>
+    </NextLink>
   );
 };
 

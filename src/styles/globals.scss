@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 body {
-  background:
-  linear-gradient(rgba(255, 255, 255, .6), rgba(255, 255, 255, .6)),
-  url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-mix-blend-mode: multiply;
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.6),
+      rgba(255, 255, 255, 0.6)
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
 }
 
 input:checked + div svg {
@@ -14,6 +16,11 @@ input:checked + div svg {
 }
 
 .effect-container {
+  position: relative;
+  display: inline-block;
+}
+
+.effect-always-container {
   position: relative;
   display: inline-block;
 }
@@ -28,8 +35,12 @@ input:checked + div svg {
   transition: text-shadow 0.3s ease;
 }
 
-.effect-container:hover .effect{
-  text-shadow: calc(-.05rem - .04em)0 .1rem rgb(30,242,241), calc(.05rem + .04em) 0 .1rem rgb(246,5,10);
+.effect-container:hover .effect {
+  text-shadow: calc(-0.05rem - 0.04em) 0 0.1rem rgb(30, 242, 241),
+    calc(0.05rem + 0.04em) 0 0.1rem rgb(246, 5, 10);
 }
 
-
+.effect-always-container .effect {
+  text-shadow: calc(-0.05rem - 0.04em) 0 0.1rem rgb(30, 242, 241),
+    calc(0.05rem + 0.04em) 0 0.1rem rgb(246, 5, 10);
+}

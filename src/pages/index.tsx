@@ -8,35 +8,7 @@ import Layout from "~/components/Layout";
 import { api, type RouterOutputs } from "~/utils/api";
 import { signIn, useSession } from "next-auth/react";
 import format from "date-fns/format";
-import { LargePodium } from "~/components/Icons/LargePodium";
-import { Pullup } from "~/components/Icons/Pullup";
-import { Swim } from "~/components/Icons/Swim";
-import { Pushup } from "~/components/Icons/Pushup";
-import { Run } from "~/components/Icons/Run";
-import { Boxer } from "~/components/Icons/Boxer";
-import { useTheme } from "next-themes";
-
-const DoneCircle = () => {
-  const { theme } = useTheme();
-
-  return (
-    <svg
-      fill={theme === "dark" ? "#fff" : "#000"}
-      width="15px"
-      height="15px"
-      viewBox="0 0 24 24"
-      id="d9090658-f907-4d85-8bc1-743b70378e93"
-      data-name="Livello 1"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        id="70fa6808-131f-4233-9c3a-fc089fd0c1c4"
-        data-name="done circle"
-        d="M12,0A12,12,0,1,0,24,12,12,12,0,0,0,12,0ZM11.52,17L6,12.79l1.83-2.37L11.14,13l4.51-5.08,2.24,2Z"
-      />
-    </svg>
-  );
-};
+import { DoneCircle } from "~/components/Icons/DoneCircle";
 
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
@@ -50,6 +22,15 @@ const LoggedOutForm: React.FC = () => {
 
   return (
     <div className="mb-20 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
+      <h3>
+        Title: <span className="font-bold">{challengeData.title}</span>
+      </h3>
+      <p className="mb-1">
+        Ends:{" "}
+        <span className="italic">
+          {format(challengeData.endDate, "MMM do")}
+        </span>
+      </p>
       {challengeData.tasks.map((task) => (
         <div key={task.id} className="flex flex-row justify-between gap-10">
           <p>{task.title}</p>
@@ -145,7 +126,18 @@ const LoggedInForm: React.FC<{
   }
 
   return (
-    <div className="mb-20 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
+    <div className="mb-14 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
+      <h3>
+        Title:{" "}
+        <span className="font-bold">{challengeData.challenge.title}</span>
+      </h3>
+      <p className="mb-1">
+        Ends:{" "}
+        <span className="italic">
+          {format(challengeData.challenge.endDate, "MMM do")}
+        </span>
+      </p>
+      <div className="min-w-full border-b border-black dark:border-white" />
       {challengeData.userChallengeTasks.map((task, i) => (
         <div key={task.id} className="flex flex-row justify-between gap-10">
           <p>{task.task.title}</p>
@@ -220,7 +212,7 @@ const Home: NextPage = () => {
               <p className="font-bold">1st</p>
               <p>{`${user.name || "User"} - ${format(
                 dateCompleted!,
-                "PP k:m"
+                "PP kk:mm"
               )}`}</p>
               <p className="font-bold">+3p</p>
             </div>
@@ -245,22 +237,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        {/* <h1 className="mb-16 mt-8 text-8xl font-extrabold tracking-tight">
-           League
-         </h1>
-         <div className="absolute right-10">
-           <Boxer />
-         </div>
-         <div className="absolute left-10 rotate-180">
-           <Boxer />
-         </div>
-         <div className="absolute left-1/2 top-1/3 -translate-x-60 -translate-y-40">
-           <Run />
-         </div>
-         <div className="absolute left-1/2 top-1/2 -translate-y-60 translate-x-40">
-           <Pullup /> */}
         <div className="effect-container">
-          <h1 className="effect dark:text my-12 font-league text-7xl md:text-9xl">
+          <h1 className="effect dark:text my-8 font-league text-7xl md:text-9xl">
             Le<span className="pl-1">a</span>gue
           </h1>
         </div>
@@ -274,29 +252,20 @@ const Home: NextPage = () => {
         ) : (
           <LoggedOutForm />
         )}
-        {/* <div className="absolute left-1/2 top-1/2 -translate-x-32 translate-y-2">
-           <Pushup />
-         </div>
-         <h2 className="mb-4 mt-4 text-xl">
-           Who completed this challenge already?
-         </h2>
-         <div className="flex flex-col gap-4 rounded-lg  border-2 border-black px-8 py-4">
-           <div className="flex flex-row justify-center">
-             <LargePodium />
-           </div> */}
         <h2 className="mb-4 text-center text-xl">
           Who completed this challenge already?
         </h2>
-        <div className="mb-20 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
+        <div className="flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           <div className="flex flex-row justify-center">
-          <Image src="/img/podium.png" alt="podium" width={100} height={150} />
-         {/* <LargePodium /> */} 
+            <Image
+              src="/img/podium.png"
+              alt="podium"
+              width={100}
+              height={150}
+            />
           </div>
           {getUsers()}
         </div>
-        {/* <div className="flex w-80 flex-row justify-end">
-          <Swim />
-        </div> */}
       </Layout>
     </>
   );

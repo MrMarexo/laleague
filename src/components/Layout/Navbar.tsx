@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
   };
 
   return (
-    <div className="position: fixed my-2 flex w-full flex-row justify-between px-5 md:px-20">
+    <div className="fixed z-50 flex w-full flex-row justify-between bg-white px-5 py-2 dark:bg-black-800 md:px-20">
       <nav className="flex flex-row items-center gap-5 text-lg md:gap-8">
         <Link href="/">
           {emojis.map((emoji, index) => (
@@ -53,15 +53,14 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
           } z-0 flex-row gap-5 md:static md:flex md:gap-8 md:bg-transparent md:shadow-none md:dark:bg-transparent`}
         >
           <nav className="top-0 flex flex-col items-start space-y-4 text-lg md:flex-row md:gap-5 md:space-y-0">
-            <Link href="/results" className="effect">
-              My&nbsp;results
-            </Link>
+            <Link href="/results">My&nbsp;results</Link>
+            <Link href="/ranks">My&nbsp;ranks</Link>
             <Link href="/scoreboard">Scoreboard</Link>
             <button
-              className="text-base transition duration-300 hover:text-pink-700 md:text-lg"
+              className="effect-container text-base transition duration-300 md:text-lg"
               onClick={onThemeToggle}
             >
-              <span className="h-6 w-6 rounded-full text-base text-black dark:text-white">
+              <span className="effect h-6 w-6 rounded-full text-base text-black dark:text-white">
                 {isDark ? "☼" : "☾"}
               </span>
             </button>
@@ -71,10 +70,10 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
       <div className="flex flex-row items-center gap-2 md:text-lg">
         {data?.user?.name ? (
           <>
-            <div>
+            <div className="hidden md:block">
               Welcome, <span className="font-bold">{data.user.name}</span>
             </div>
-            <div>|</div>
+            <div className="hidden md:block">|</div>
             <button
               className="text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
               onClick={() => void signOut()}
@@ -84,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
           </>
         ) : (
           <button
-            className="text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
+            className="effect text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
             onClick={() => void signIn()}
           >
             Sign in

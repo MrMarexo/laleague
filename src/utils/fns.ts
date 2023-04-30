@@ -12,3 +12,11 @@ export const calculatePoints = (completedChallengesLength: number) => {
   }
   return { placement: completedChallengesLength + 1, extraPoints };
 };
+
+export const getImgIdFromRankId = (rank: number) => {
+  let str = rank.toString();
+  if (str.length === 1) {
+    str = "0" + str;
+  }
+  return str;
+};
