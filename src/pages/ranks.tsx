@@ -6,13 +6,10 @@ import { api } from "~/utils/api";
 
 import Layout from "~/components/Layout";
 import { getImgIdFromRankId } from "~/utils/fns";
+import { Loading } from "~/components/Icons/Loading";
 
 const UserRanks: React.FC = () => {
   const { data: ranksData } = api.challenges.getAchievedRanks.useQuery();
-
-  console.log("RANKS", ranksData);
-
-  // const imgId = getImgIdFromRankId(profileData?.rank?.id || 1);
 
   if (!ranksData || ranksData?.achievedRanks?.length === 0) {
     return null;
@@ -37,7 +34,7 @@ const UserRanks: React.FC = () => {
                 <p>
                   {id === 1 ? (
                     <>
-                      starting <b>rank</b>
+                      starting <b>&apos;rank&apos;</b>
                     </>
                   ) : (
                     <>
@@ -77,7 +74,17 @@ const UserRanks: React.FC = () => {
 };
 
 const Ranks: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <Layout>
+        <div className="mt-44">
+          <Loading />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "../Link/Link";
 import BurgerButton from "./BurgerButton";
+import { LightSwitch } from "../LightSwitch";
 
 type NavbarProps = {
   onThemeToggle: () => void;
@@ -56,14 +57,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
             <Link href="/results">My&nbsp;results</Link>
             <Link href="/ranks">My&nbsp;ranks</Link>
             <Link href="/scoreboard">Scoreboard</Link>
-            <button
-              className="effect-container text-base transition duration-300 md:text-lg"
-              onClick={onThemeToggle}
-            >
-              <span className="effect h-6 w-6 rounded-full text-base text-black dark:text-white">
-                {isDark ? "☼" : "☾"}
-              </span>
-            </button>
+            <LightSwitch />
           </nav>
         </section>
       </nav>

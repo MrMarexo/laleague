@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 import Layout from "~/components/Layout";
 import { ChallengeList } from "~/components/ChallengeList";
 import { getImgIdFromRankId } from "~/utils/fns";
+import { Loading } from "~/components/Icons/Loading";
 
 export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
   const { data: profileData } = api.challenges.getUserResults.useQuery({
@@ -83,7 +84,17 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
 };
 
 const Results: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <Layout>
+        <div className="mt-44">
+          <Loading />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

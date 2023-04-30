@@ -16,7 +16,7 @@ const Scoreboard: NextPage = () => {
     <Layout>
       <h2 className="mb-4 mt-10 text-xl">Who&apos;s leading?</h2>
       <div className="flex w-fit flex-col gap-3 rounded-lg border-2 border-black px-4 py-2 dark:border-gray-400">
-        {data &&
+        {data ? (
           data.map((user, i) => {
             const imgId = getImgIdFromRankId(user.rankId || 1);
             const isMe = sessionData && sessionData.user.id === user.id;
@@ -55,7 +55,10 @@ const Scoreboard: NextPage = () => {
                 )}
               </>
             );
-          })}
+          })
+        ) : (
+          <div className="h-20 w-60" />
+        )}
       </div>
     </Layout>
   );

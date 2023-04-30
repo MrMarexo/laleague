@@ -14,15 +14,17 @@ import Link from "~/components/Link/Link";
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
 
+const skeleton = <div className="h-44 w-44" />;
+
 const LoggedOutForm: React.FC = () => {
   const { data: challengeData } = api.challenges.getCurrentChallenge.useQuery();
 
   if (!challengeData) {
-    return null;
+    return skeleton;
   }
 
   return (
-    <div className="mb-20 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
+    <>
       <h3>
         Title: <span className="font-bold">{challengeData.title}</span>
       </h3>
@@ -46,7 +48,7 @@ const LoggedOutForm: React.FC = () => {
       <div className="mt-5 flex flex-row justify-center">
         <p className="font-bold">+{challengeData.point || 0}p</p>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -123,11 +125,11 @@ const LoggedInForm: React.FC<{
   };
 
   if (!challengeData) {
-    return null;
+    return skeleton;
   }
 
   return (
-    <div className="mb-14 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
+    <>
       <h3>
         Title:{" "}
         <span className="font-bold">{challengeData.challenge.title}</span>
@@ -167,7 +169,7 @@ const LoggedInForm: React.FC<{
           <p className="font-bold">+{challengeData?.challenge.point || 0}p</p>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
@@ -250,16 +252,18 @@ const Home: NextPage = () => {
             Le<span className="pl-1">a</span>gue
           </h1>
         </div>
-        <h2 className="mb-4 text-xl">Current challenge</h2>
-        {sessionData ? (
-          <LoggedInForm
-            setAllCompleted={(isChallengeComplete) =>
-              setIsChallengeComplete(isChallengeComplete)
-            }
-          />
-        ) : (
-          <LoggedOutForm />
-        )}
+        <h2 className="mb-4 text-xl">Weekly challenge</h2>
+        <div className="mb-14 flex flex-col gap-2 rounded-lg border-2 border-black px-4 py-4 dark:border-white">
+          {sessionData ? (
+            <LoggedInForm
+              setAllCompleted={(isChallengeComplete) =>
+                setIsChallengeComplete(isChallengeComplete)
+              }
+            />
+          ) : (
+            <LoggedOutForm />
+          )}
+        </div>
         <h2 className="mb-4 text-center text-xl">
           Who completed this challenge already?
         </h2>
