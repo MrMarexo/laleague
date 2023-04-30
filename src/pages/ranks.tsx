@@ -1,12 +1,13 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { api } from "~/utils/api";
 
 import Layout from "~/components/Layout";
 import { getImgIdFromRankId } from "~/utils/fns";
 import { Loading } from "~/components/Icons/Loading";
+import { SignIn } from "~/components/SignIn";
 
 const UserRanks: React.FC = () => {
   const { data: ranksData } = api.challenges.getAchievedRanks.useQuery();
@@ -93,12 +94,10 @@ const Ranks: NextPage = () => {
           <UserRanks />
         </>
       ) : (
-        <button
-          className=" mt-4 text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
-          onClick={() => void signIn()}
-        >
-          Log in
-        </button>
+        <div className="mt-20 flex flex-col items-center">
+          <p>You&apos;re missing out!</p>
+          <SignIn />
+        </div>
       )}
     </Layout>
   );

@@ -34,6 +34,8 @@ const LoggedOutForm: React.FC = () => {
           {format(challengeData.endDate, "MMM do")}
         </span>
       </p>
+      <div className="min-w-full border-b border-black dark:border-white" />
+
       {challengeData.tasks.map((task) => (
         <div key={task.id} className="flex flex-row justify-between gap-10">
           <p>{task.title}</p>
@@ -45,7 +47,7 @@ const LoggedOutForm: React.FC = () => {
           </button>
         </div>
       ))}
-      <div className="mt-5 flex flex-row justify-center">
+      <div className="mt-1 flex flex-row justify-center">
         <p className="font-bold">+{challengeData.point || 0}p</p>
       </div>
     </>
@@ -159,7 +161,7 @@ const LoggedInForm: React.FC<{
           )}
         </div>
       ))}
-      <div className="mt-5 flex flex-row justify-center">
+      <div className="mt-4 flex flex-row justify-center">
         {isChallengeCompleted ? (
           <div className="flex flex-row items-center gap-1 text-sm font-bold">
             <DoneCircle />

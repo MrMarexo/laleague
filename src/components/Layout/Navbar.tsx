@@ -3,6 +3,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "../Link/Link";
 import BurgerButton from "./BurgerButton";
 import { LightSwitch } from "../LightSwitch";
+import { SignIn } from "../SignIn";
+import { SignOut } from "../SignOut";
 
 type NavbarProps = {
   onThemeToggle: () => void;
@@ -68,20 +70,10 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
               Welcome, <span className="font-bold">{data.user.name}</span>
             </div>
             <div className="hidden md:block">|</div>
-            <button
-              className="text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
-              onClick={() => void signOut()}
-            >
-              Sign out
-            </button>
+            <SignOut />
           </>
         ) : (
-          <button
-            className="effect text-base text-black transition duration-300 hover:text-pink-700 dark:text-white md:text-lg"
-            onClick={() => void signIn()}
-          >
-            Sign in
-          </button>
+          <SignIn />
         )}
         <BurgerButton onToggle={handleNavToggle} />
       </div>
