@@ -16,6 +16,12 @@ export default {
       },
       colors: {
         "league-gray-800": "#383838",
+        "league-gray-700": "#B8B8B8",
+        "league-gray-300": "#DADADA",
+        "league-gray-200": "#DBDBDB",
+        "league-gray-100": "#E8E7E7",
+        "league-red": "#f6050a",
+        "league-blue": "#1EF2F1",
       },
     },
   },
