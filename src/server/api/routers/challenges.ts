@@ -92,7 +92,13 @@ export const challengesRouter = createTRPCRouter({
           id: true,
           userChallengeTasks: {
             select: {
-              task: true,
+              task: {
+                select: {
+                  title: true,
+                  description: true,
+                  id: true,
+                },
+              },
               notes: true,
               taskCompletedAt: true,
               id: true,

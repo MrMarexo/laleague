@@ -17,21 +17,13 @@ input:checked + div svg {
 
 .effect-container {
   position: relative;
-  display: inline-block;
 }
 
 .effect-always-container {
   position: relative;
-  display: inline-block;
 }
 
 .effect {
-  box-sizing: content-box;
-  border: none;
-  text-align: center;
-  letter-spacing: 0.03em;
-  text-rendering: optimizeLegibility;
-  text-overflow: clip;
   transition: text-shadow 0.3s ease;
 }
 

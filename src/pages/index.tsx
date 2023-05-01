@@ -62,12 +62,15 @@ const LoggedInForm: React.FC<{
       enabled: false,
     });
 
+  // const handleInfo = (index: number) => {};
+
   const { mutateAsync } = api.challenges.setTaskValues.useMutation();
 
   const [isChallengeCompleted, setChallengeCompleted] = useState(false);
 
-  const [tasksState, setTasksState] =
-    useState<Array<{ id: string; isCompleted: boolean }>>();
+  const [tasksState, setTasksState] = useState<
+    Array<{ id: string; isCompleted: boolean; isDescriptionOpen?: boolean }>
+  >([{ id: "", isCompleted: false }]);
 
   useEffect(() => {
     const allTasksAreCompleted = tasksState?.every((item) => item.isCompleted);
@@ -126,6 +129,21 @@ const LoggedInForm: React.FC<{
     }
   };
 
+  const handleDescription = (index: number, isOpen: boolean) => {
+    console.log("HANDLE RUNS");
+    setTasksState((current) => {
+      return current.map((state, i) => {
+        if (i === index) {
+          state.isDescriptionOpen = isOpen;
+          return state;
+        }
+        return state;
+      });
+    });
+  };
+
+  console.log("STATE", tasksState);
+
   if (!challengeData) {
     return skeleton;
   }
@@ -144,8 +162,27 @@ const LoggedInForm: React.FC<{
       </p>
       <div className="min-w-full border-b border-black dark:border-white" />
       {challengeData.userChallengeTasks.map((task, i) => (
-        <div key={task.id} className="flex flex-row justify-between gap-10">
-          <p>{task.task.title}</p>
+        <div
+          key={task.id}
+          className="flex flex-row items-center justify-between gap-10"
+        >
+          <div className="effect-container relative flex items-center gap-2">
+            <button
+              onClick={() => handleDescription(i, true)}
+              onBlur={() => handleDescription(i, false)}
+              className="effect mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border border-league-gray-800"
+            >
+              <p>i</p>
+            </button>
+            <p>{task.task.title}</p>
+            <div
+              className={`left-1/5 absolute bottom-6 ${
+                tasksState?.[i]?.isDescriptionOpen ? "" : "hidden"
+              } rounded border border-black bg-white px-4 py-2 dark:border-white dark:bg-black`}
+            >
+              <p className="text-sm">{task.task.description}</p>
+            </div>
+          </div>
           {tasksState?.find((state) => state.id === task.id)?.isCompleted ? (
             <div className="flex flex-row items-center gap-1">
               <DoneCircle />
@@ -154,7 +191,7 @@ const LoggedInForm: React.FC<{
           ) : (
             <button
               onClick={() => handleButton(task.id, challengeData)}
-              className="duration-400 rounded border  border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white dark:border-white"
+              className="duration-400 rounded border  border-black bg-transparent px-3 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white dark:border-white"
             >
               Complete
             </button>
