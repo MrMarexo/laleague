@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import Layout from "~/components/Layout";
@@ -11,6 +10,7 @@ import format from "date-fns/format";
 import { DoneCircle } from "~/components/Icons/DoneCircle";
 import Link from "~/components/Link/Link";
 import { getPositionShort } from "~/utils/fns";
+import PodiumIcon from "~/components/Icons/PodiumIcon";
 
 const scoringTable = [
   { arr: ["1st", "3"] },
@@ -175,7 +175,7 @@ const LoggedInForm: React.FC<{
             <button
               onClick={() => handleDescription(i, true)}
               onBlur={() => handleDescription(i, false)}
-              className="effect mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border border-league-gray-800"
+              className="effect mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border border-league-gray-6"
             >
               <p>i</p>
             </button>
@@ -311,12 +311,7 @@ const Home: NextPage = () => {
         </h2>
         <div className="mb-10 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           <div className="flex flex-row justify-center">
-            <Image
-              src="/img/podium.png"
-              alt="podium"
-              width={100}
-              height={150}
-            />
+            <PodiumIcon />
           </div>
           {getUsers()}
         </div>

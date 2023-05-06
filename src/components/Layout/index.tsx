@@ -1,8 +1,8 @@
 import { useTheme } from "next-themes";
 import { type ReactFCC } from "~/types/types";
 import Navbar from "./Navbar";
-import BoxerRed from "~/components/BoxerRed";
-import BoxerBlue from "~/components/BoxerBlue";
+import BoxerRight from "~/components/BoxerRight";
+import BoxerLeft from "~/components/BoxerLeft";
 
 const Layout: ReactFCC<{ isFlexOff?: boolean; isWithBoxers?: boolean }> = ({
   children,
@@ -24,11 +24,11 @@ const Layout: ReactFCC<{ isFlexOff?: boolean; isWithBoxers?: boolean }> = ({
         <>
           <div className="position absolute z-0 mt-20 hidden w-screen pt-10 md:block">
             <div className="absolute"></div>
-            <BoxerBlue />
+            <BoxerLeft />
           </div>
           <div className="position absolute z-0 mt-20 hidden w-screen pt-10 md:block">
             <div className="absolute right-0">
-              <BoxerRed />
+              <BoxerRight />
             </div>
           </div>
         </>
