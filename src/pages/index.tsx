@@ -10,6 +10,13 @@ import { signIn, useSession } from "next-auth/react";
 import format from "date-fns/format";
 import { DoneCircle } from "~/components/Icons/DoneCircle";
 import Link from "~/components/Link/Link";
+import { getPositionShort } from "~/utils/fns";
+
+const scoringTable = [
+  { arr: ["1st", "3"] },
+  { arr: ["2nd", "2"] },
+  { arr: ["3rd", "1"] },
+];
 
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
@@ -106,6 +113,7 @@ const LoggedInForm: React.FC<{
         taskId: found.id,
         isCompleted: !found.isCompleted,
         userChallengeId: challengeData.id,
+        challengeId: challengeData.challenge.id,
       })
         .then((res) => {
           if (res) {
@@ -130,7 +138,6 @@ const LoggedInForm: React.FC<{
   };
 
   const handleDescription = (index: number, isOpen: boolean) => {
-    console.log("HANDLE RUNS");
     setTasksState((current) => {
       return current.map((state, i) => {
         if (i === index) {
@@ -141,8 +148,6 @@ const LoggedInForm: React.FC<{
       });
     });
   };
-
-  console.log("STATE", tasksState);
 
   if (!challengeData) {
     return skeleton;
@@ -232,11 +237,7 @@ const Home: NextPage = () => {
   }, [isChallengeComplete]);
 
   const getUsers = () => {
-    const defaultItems = [
-      { arr: ["1st", "3"] },
-      { arr: ["2nd", "2"] },
-      { arr: ["3rd", "1"] },
-    ].map(({ arr }) => (
+    const defaultItems = scoringTable.map(({ arr }) => (
       <div
         key={arr[0]}
         className="flex flex-row justify-between gap-6 text-gray-400"
@@ -252,7 +253,7 @@ const Home: NextPage = () => {
           const isMe = sessionData && sessionData.user.id === user.id;
           return (
             <div key={index} className="flex flex-row justify-between gap-6">
-              <p className="font-bold">1st</p>
+              <p className="font-bold">{getPositionShort(index + 1)}</p>
               <p>
                 {isMe ? (
                   <i>
@@ -263,7 +264,9 @@ const Home: NextPage = () => {
                 )}{" "}
                 - {format(dateCompleted!, "PP kk:mm")}
               </p>
-              <p className="font-bold">+3p</p>
+              <p className="font-bold">
+                +{index < 3 ? scoringTable[index]?.arr[1] : 0}p
+              </p>
             </div>
           );
         }

@@ -87,7 +87,9 @@ export const challengesRouter = createTRPCRouter({
         orderBy: { id: "desc" },
         take: 1,
         select: {
-          challenge: { select: { point: true, title: true, endDate: true } },
+          challenge: {
+            select: { id: true, point: true, title: true, endDate: true },
+          },
           dateCompleted: true,
           id: true,
           userChallengeTasks: {
@@ -141,6 +143,7 @@ export const challengesRouter = createTRPCRouter({
         taskId: z.string(),
         isCompleted: z.boolean(),
         userChallengeId: z.string(),
+        challengeId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -186,7 +189,7 @@ export const challengesRouter = createTRPCRouter({
       if (allTasksComplete) {
         const completedChallengesCount = await ctx.prisma.userChallenge.count({
           where: {
-            challengeId: input.userChallengeId,
+            challengeId: input.challengeId,
             isCompleted: true,
           },
         });

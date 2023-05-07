@@ -2,19 +2,7 @@ import React from "react";
 import { api } from "~/utils/api";
 import { format } from "date-fns";
 import { DoneCircle } from "../Icons/DoneCircle";
-
-const getNumberString = (position: number) => {
-  if (position === 1) {
-    return "1st";
-  }
-  if (position === 2) {
-    return "2nd";
-  }
-  if (position === 3) {
-    return "3rd";
-  }
-  return `${position}th`;
-};
+import { getPositionShort } from "~/utils/fns";
 
 export const ChallengeList: React.FC = () => {
   const { data: challenges } =
@@ -72,7 +60,7 @@ export const ChallengeList: React.FC = () => {
                       <DoneCircle />
                       <p className="text-sm font-bold">Done</p>
                     </div>
-                    <p className="font-bold">{getNumberString(placement)}</p>
+                    <p className="font-bold">{getPositionShort(placement)}</p>
                   </>
                 ) : (
                   <p className="font-bold">Not completed</p>
