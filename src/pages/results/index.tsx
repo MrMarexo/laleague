@@ -9,6 +9,10 @@ import { ChallengeList } from "~/components/ChallengeList";
 import { getImgIdFromRankId } from "~/utils/fns";
 import { Loading } from "~/components/Icons/Loading";
 import { SignIn } from "~/components/SignIn";
+import AttendeesIcon from "~/components/Results/AttendeesIcon";
+import CupIcon from "~/components/Results/CupIcon";
+import CheckStarIcon from "~/components/Results/CheckStarIcon";
+import PodiumStarIcon from "~/components/Results/PodiumStarsIcon";
 
 export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
   const { data: profileData } = api.challenges.getUserResults.useQuery({
@@ -19,27 +23,27 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
 
   const stats = [
     {
-      imgSrc: "/img/results/fist.png",
+      icon: <AttendeesIcon />,
       label: "Challenges attended",
       value: profileData?.numberOfAttendedChallenges,
     },
     {
-      imgSrc: "/img/results/checkStar.png",
+      icon: <CheckStarIcon />,
       label: "Challenges completed",
       value: profileData?.numberOfCompletedChallenges,
     },
     // {
-    //   imgSrc: "/img/results/checkmarks.png",
+    //   icon: "/img/results/checkmarks.png",
     //   label: "Tasks completed",
     //   value: profileData?.numberOfCompletedChallenges,
     // },
     {
-      imgSrc: "/img/results/podiumStars.png",
+      icon: <PodiumStarIcon />,
       label: "Podiums",
       value: profileData?.numberOfPodiums,
     },
     {
-      imgSrc: "/img/results/cup.png",
+      icon: <CupIcon />,
       label: "First places",
       value: profileData?.numberOfFirst,
     },
@@ -66,13 +70,13 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
             <p className="effect my-4 text-3xl">{profileData?.rank?.name}</p>
           </aside>
 
-          <ul className="mt-10 space-y-2 text-center md:mt-5 md:text-left">
+          <ul className="mt-10 space-y-5 text-center md:mt-5 md:text-left">
             {stats.map((stat) => (
               <li
                 key={stat.label}
-                className="mx-auto flex flex-row items-center gap-2 md:text-left"
+                className="mx-auto flex flex-row items-center gap-3 md:text-left"
               >
-                <Image width={50} height={50} src={stat.imgSrc} alt="whatevs" />
+                <span className="h-12 w-12">{stat.icon}</span>
                 {stat.label}: <b>{stat.value}</b>
               </li>
             ))}
