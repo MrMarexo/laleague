@@ -177,7 +177,7 @@ const LoggedInForm: React.FC<{
       {challengeData.userChallengeTasks.map((task, i) => (
         <div
           key={task.id}
-          className="relative flex flex-row items-center justify-between gap-10"
+          className="relative flex flex-row items-center justify-between gap-6"
         >
           <div className="effect-container relative flex items-center gap-2">
             <button
@@ -187,7 +187,7 @@ const LoggedInForm: React.FC<{
               onBlur={() =>
                 handleTaskStateBoolean(i, false, "isDescriptionOpen")
               }
-              className="effect mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border border-league-gray-6"
+              className=" effect mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-league-gray-6"
             >
               <p>i</p>
             </button>
