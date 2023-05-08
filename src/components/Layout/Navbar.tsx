@@ -55,7 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
               : "z-0 hidden flex-row gap-5 md:static md:flex md:gap-8 md:bg-transparent md:shadow-none md:dark:bg-transparent"
           } z-0 flex-row gap-5 md:static md:flex md:gap-8 md:bg-transparent md:shadow-none md:dark:bg-transparent`}
         >
-          <nav className="top-0 mt-10 flex flex-col space-y-4 text-base md:mt-0 md:flex-row md:gap-5 md:space-y-0 md:text-lg">
+          <nav className="top-0 mt-10 flex flex-col items-end space-y-4 text-base md:mt-0 md:flex-row md:gap-5 md:space-y-0 md:text-lg">
             <Link href="/results">My&nbsp;results</Link>
             <Link href="/ranks">My&nbsp;ranks</Link>
             <Link href="/scoreboard">Scoreboard</Link>
