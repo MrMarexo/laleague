@@ -32,7 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
   };
 
   return (
-    <div className="fixed z-50 flex w-full flex-row justify-between bg-white px-5 py-2 dark:bg-black-800 md:px-20">
+    <div className="fixed z-20 flex w-full flex-row justify-between bg-white px-5 py-2 dark:bg-black-800 md:px-20">
       <nav className="flex flex-row items-center gap-5 text-lg md:gap-8">
         <Link href="/">
           {emojis.map((emoji, index) => (
@@ -55,7 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
               : "z-0 hidden flex-row gap-5 md:static md:flex md:gap-8 md:bg-transparent md:shadow-none md:dark:bg-transparent"
           } z-0 flex-row gap-5 md:static md:flex md:gap-8 md:bg-transparent md:shadow-none md:dark:bg-transparent`}
         >
-          <nav className="top-0 flex flex-col items-start space-y-4 text-lg md:flex-row md:gap-5 md:space-y-0">
+          <nav className="top-0 mt-10 flex flex-col space-y-4 text-base md:mt-0 md:flex-row md:gap-5 md:space-y-0 md:text-lg">
             <Link href="/results">My&nbsp;results</Link>
             <Link href="/ranks">My&nbsp;ranks</Link>
             <Link href="/scoreboard">Scoreboard</Link>

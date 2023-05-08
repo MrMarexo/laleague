@@ -11,12 +11,21 @@ import { DoneCircle } from "~/components/Icons/DoneCircle";
 import Link from "~/components/Link/Link";
 import { getPositionShort } from "~/utils/fns";
 import PodiumIcon from "~/components/Icons/PodiumIcon";
+import { MyButton } from "~/components/MyButton";
+import { Modal } from "~/components/Modal";
 
 const scoringTable = [
   { arr: ["1st", "3"] },
   { arr: ["2nd", "2"] },
   { arr: ["3rd", "1"] },
 ];
+
+type TaskStateProps = {
+  id: string;
+  isCompleted: boolean;
+  isDescriptionOpen?: boolean;
+  isConfirmOpen?: boolean;
+};
 
 type TasksFromUserChallenge =
   RouterOutputs["challenges"]["getTasksFromLastChallenge"];
@@ -46,12 +55,7 @@ const LoggedOutForm: React.FC = () => {
       {challengeData.tasks.map((task) => (
         <div key={task.id} className="flex flex-row justify-between gap-10">
           <p>{task.title}</p>
-          <button
-            onClick={() => void signIn()}
-            className="duration-400 rounded border border-black bg-transparent px-4 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white dark:border-white"
-          >
-            Complete
-          </button>
+          <MyButton onClick={() => void signIn()}>Complete</MyButton>
         </div>
       ))}
       <div className="mt-1 flex flex-row justify-center">
@@ -75,9 +79,9 @@ const LoggedInForm: React.FC<{
 
   const [isChallengeCompleted, setChallengeCompleted] = useState(false);
 
-  const [tasksState, setTasksState] = useState<
-    Array<{ id: string; isCompleted: boolean; isDescriptionOpen?: boolean }>
-  >([{ id: "", isCompleted: false }]);
+  const [tasksState, setTasksState] = useState<Array<TaskStateProps>>([
+    { id: "", isCompleted: false },
+  ]);
 
   useEffect(() => {
     const allTasksAreCompleted = tasksState?.every((item) => item.isCompleted);
@@ -103,7 +107,7 @@ const LoggedInForm: React.FC<{
       });
   }, [refetch]);
 
-  const handleButton = (
+  const handleApi = (
     takenId: string,
     challengeData: NonNullable<TasksFromUserChallenge>
   ) => {
@@ -137,11 +141,15 @@ const LoggedInForm: React.FC<{
     }
   };
 
-  const handleDescription = (index: number, isOpen: boolean) => {
+  const handleTaskStateBoolean = (
+    index: number,
+    isOpen: boolean,
+    prop: "isConfirmOpen" | "isDescriptionOpen"
+  ) => {
     setTasksState((current) => {
       return current.map((state, i) => {
         if (i === index) {
-          state.isDescriptionOpen = isOpen;
+          state[prop] = isOpen;
           return state;
         }
         return state;
@@ -169,12 +177,16 @@ const LoggedInForm: React.FC<{
       {challengeData.userChallengeTasks.map((task, i) => (
         <div
           key={task.id}
-          className="flex flex-row items-center justify-between gap-10"
+          className="relative flex flex-row items-center justify-between gap-10"
         >
           <div className="effect-container relative flex items-center gap-2">
             <button
-              onClick={() => handleDescription(i, true)}
-              onBlur={() => handleDescription(i, false)}
+              onClick={() =>
+                handleTaskStateBoolean(i, true, "isDescriptionOpen")
+              }
+              onBlur={() =>
+                handleTaskStateBoolean(i, false, "isDescriptionOpen")
+              }
               className="effect mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border border-league-gray-6"
             >
               <p>i</p>
@@ -194,13 +206,32 @@ const LoggedInForm: React.FC<{
               <p className="text-sm font-bold">Done</p>
             </div>
           ) : (
-            <button
-              onClick={() => handleButton(task.id, challengeData)}
-              className="duration-400 rounded border  border-black bg-transparent px-3 py-1 text-xs font-semibold transition-all hover:bg-black hover:text-white dark:border-white"
+            <MyButton
+              onClick={() => handleTaskStateBoolean(i, true, "isConfirmOpen")}
             >
               Complete
-            </button>
+            </MyButton>
           )}
+          <Modal
+            isOpen={!!tasksState?.[i]?.isConfirmOpen}
+            close={() => handleTaskStateBoolean(i, false, "isConfirmOpen")}
+          >
+            <p className="text-center text-sm">
+              Are you sure you completed it?
+            </p>
+            <div className="flex gap-4">
+              <MyButton onClick={() => handleApi(task.id, challengeData)}>
+                Yes
+              </MyButton>
+              <MyButton
+                onClick={() =>
+                  handleTaskStateBoolean(i, false, "isConfirmOpen")
+                }
+              >
+                Hmmm ...
+              </MyButton>
+            </div>
+          </Modal>
         </div>
       ))}
       <div className="mt-4 flex flex-row justify-center">
@@ -284,8 +315,11 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>League homepage</title>
-        <meta name="description" content="Generated by create-t3-app" />
+        <title>League</title>
+        <meta
+          name="description"
+          content="Complete objectives and move up in ranks"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout isWithBoxers>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 type BurgerButtonProps = {
   onToggle: (isOpen: boolean) => void;
@@ -14,22 +14,22 @@ const BurgerButton: React.FC<BurgerButtonProps> = ({ onToggle }) => {
 
   return (
     <button
-      className="inline-block md:hidden cursor-pointer p-2 focus:outline-none focus:ring-0 z-100"
+      className="z-30 inline-block cursor-pointer p-2 focus:outline-none focus:ring-0 md:hidden"
       onClick={handleClick}
     >
       <span
-        className={`block w-6 h-0.5 bg-black dark:bg-white transition-all duration-300 ${
-          isOpen ? 'transform rotate-45 translate-y-2' : ''
+        className={`block h-0.5 w-6 bg-black transition-all duration-300 dark:bg-white ${
+          isOpen ? "translate-y-2 rotate-45 transform" : ""
         }`}
       ></span>
       <span
-        className={`block w-6 h-0.5 bg-black dark:bg-white mt-1.5 transition-all duration-300 ${
-          isOpen ? 'opacity-0' : ''
+        className={`mt-1.5 block h-0.5 w-6 bg-black transition-all duration-300 dark:bg-white ${
+          isOpen ? "opacity-0" : ""
         }`}
       ></span>
       <span
-        className={`block w-6 h-0.5 bg-black dark:bg-white mt-1.5 transition-all duration-300 ${
-          isOpen ? 'transform -rotate-45 -translate-y-2' : ''
+        className={`mt-1.5 block h-0.5 w-6 bg-black transition-all duration-300 dark:bg-white ${
+          isOpen ? "-translate-y-2 -rotate-45 transform" : ""
         }`}
       ></span>
     </button>
