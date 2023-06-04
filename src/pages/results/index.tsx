@@ -13,6 +13,7 @@ import AttendeesIcon from "~/components/Results/AttendeesIcon";
 import CupIcon from "~/components/Results/CupIcon";
 import CheckStarIcon from "~/components/Results/CheckStarIcon";
 import PodiumStarIcon from "~/components/Results/PodiumStarsIcon";
+import CheckmarksIcon from "~/components/Results/CheckmarksIcon";
 
 export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
   const { data: profileData } = api.challenges.getUserResults.useQuery({
@@ -32,11 +33,11 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
       label: "Challenges completed",
       value: profileData?.numberOfCompletedChallenges,
     },
-    // {
-    //   icon: "/img/results/checkmarks.png",
-    //   label: "Tasks completed",
-    //   value: profileData?.numberOfCompletedChallenges,
-    // },
+    {
+      icon: <CheckmarksIcon />,
+      label: "Tasks completed",
+      value: profileData?.numberOfCompletedTasks,
+    },
     {
       icon: <PodiumStarIcon />,
       label: "Podiums",

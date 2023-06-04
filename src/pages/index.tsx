@@ -59,7 +59,7 @@ const LoggedOutForm: React.FC = () => {
         </div>
       ))}
       <div className="mt-1 flex flex-row justify-center">
-        <p className="font-bold">+{challengeData.point || 0}p</p>
+        <p className="font-bold">+{challengeData.extraPoints || 0}p</p>
       </div>
     </>
   );
@@ -175,63 +175,68 @@ const LoggedInForm: React.FC<{
       </p>
       <div className="min-w-full border-b border-black dark:border-white" />
       {challengeData.userChallengeTasks.map((task, i) => (
-        <div
-          key={task.id}
-          className="relative flex flex-row items-center justify-between gap-6"
-        >
-          <div className="effect-container relative flex items-center gap-2">
-            <button
-              onClick={() =>
-                handleTaskStateBoolean(i, true, "isDescriptionOpen")
-              }
-              onBlur={() =>
-                handleTaskStateBoolean(i, false, "isDescriptionOpen")
-              }
-              className=" effect mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-league-gray-6"
-            >
-              <p>i</p>
-            </button>
-            <p>{task.task.title}</p>
-            <div
-              className={`left-1/5 absolute bottom-6 ${
-                tasksState?.[i]?.isDescriptionOpen ? "" : "hidden"
-              } rounded border border-black bg-white px-4 py-2 dark:border-white dark:bg-black`}
-            >
-              <p className="text-sm">{task.task.description}</p>
-            </div>
-          </div>
-          {tasksState?.find((state) => state.id === task.id)?.isCompleted ? (
-            <div className="flex flex-row items-center gap-1">
-              <DoneCircle />
-              <p className="text-sm font-bold">Done</p>
-            </div>
-          ) : (
-            <MyButton
-              onClick={() => handleTaskStateBoolean(i, true, "isConfirmOpen")}
-            >
-              Complete
-            </MyButton>
-          )}
-          <Modal
-            isOpen={!!tasksState?.[i]?.isConfirmOpen}
-            close={() => handleTaskStateBoolean(i, false, "isConfirmOpen")}
-          >
-            <p className="text-center text-sm">
-              Are you sure you completed it?
-            </p>
-            <div className="flex gap-4">
-              <MyButton onClick={() => handleApi(task.id, challengeData)}>
-                Yes
-              </MyButton>
-              <MyButton
+        <div key={task.id}>
+          <div className="relative flex flex-row items-center justify-between gap-6">
+            <div className="effect-container relative flex items-center gap-2">
+              <button
                 onClick={() =>
-                  handleTaskStateBoolean(i, false, "isConfirmOpen")
+                  handleTaskStateBoolean(i, true, "isDescriptionOpen")
                 }
+                onBlur={() =>
+                  handleTaskStateBoolean(i, false, "isDescriptionOpen")
+                }
+                className=" effect mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-league-gray-6"
               >
-                Hmmm ...
-              </MyButton>
+                <p>i</p>
+              </button>
+              <p>{task.task.title}</p>
+              <div
+                className={`left-1/5 absolute bottom-6 ${
+                  tasksState?.[i]?.isDescriptionOpen ? "" : "hidden"
+                } rounded border border-black bg-white px-4 py-2 dark:border-white dark:bg-black`}
+              >
+                <p className="text-sm">{task.task.description}</p>
+              </div>
             </div>
-          </Modal>
+            {tasksState?.find((state) => state.id === task.id)?.isCompleted ? (
+              <div className="flex flex-row items-center gap-1">
+                <DoneCircle />
+                <p className="text-sm font-bold">Done</p>
+              </div>
+            ) : (
+              <MyButton
+                onClick={() => handleTaskStateBoolean(i, true, "isConfirmOpen")}
+              >
+                Complete
+              </MyButton>
+            )}
+            <Modal
+              isOpen={!!tasksState?.[i]?.isConfirmOpen}
+              close={() => handleTaskStateBoolean(i, false, "isConfirmOpen")}
+            >
+              <p className="text-center text-sm">
+                Are you sure you completed it?
+              </p>
+              <div className="flex gap-4">
+                <MyButton onClick={() => handleApi(task.id, challengeData)}>
+                  Yes
+                </MyButton>
+                <MyButton
+                  onClick={() =>
+                    handleTaskStateBoolean(i, false, "isConfirmOpen")
+                  }
+                >
+                  Hmmm ...
+                </MyButton>
+              </div>
+            </Modal>
+          </div>
+          <div className="flex items-center justify-between">
+            <p>
+              Difficulty: <i>{task.task.difficulty.name}</i>
+            </p>
+            <p className="font-bold">+{task.task.difficulty.points}p</p>
+          </div>
         </div>
       ))}
       <div className="mt-4 flex flex-row justify-center">
@@ -241,7 +246,9 @@ const LoggedInForm: React.FC<{
             Challenge completed
           </div>
         ) : (
-          <p className="font-bold">+{challengeData?.challenge.point || 0}p</p>
+          <p className="font-bold">
+            +{challengeData?.challenge.extraPoints || 0}p
+          </p>
         )}
       </div>
     </>

@@ -88,7 +88,7 @@ export const challengesRouter = createTRPCRouter({
         take: 1,
         select: {
           challenge: {
-            select: { id: true, point: true, title: true, endDate: true },
+            select: { id: true, extraPoints: true, title: true, endDate: true },
           },
           dateCompleted: true,
           id: true,
@@ -99,6 +99,13 @@ export const challengesRouter = createTRPCRouter({
                   title: true,
                   description: true,
                   id: true,
+                  difficulty: {
+                    select: {
+                      id: true,
+                      points: true,
+                      name: true,
+                    },
+                  },
                 },
               },
               notes: true,
@@ -126,6 +133,7 @@ export const challengesRouter = createTRPCRouter({
               data: {
                 userChallenge: { connect: { id: userChallenge.id } },
                 task: { connect: { id: curTask.id } },
+                user: { connect: { id: ctx.session.user.id } },
               },
             });
           }
@@ -153,7 +161,18 @@ export const challengesRouter = createTRPCRouter({
           data: {
             taskCompletedAt: input.isCompleted ? new Date() : null,
           },
-          select: { id: true },
+          select: {
+            id: true,
+            task: {
+              select: {
+                difficulty: {
+                  select: {
+                    points: true,
+                  },
+                },
+              },
+            },
+          },
         })
         .catch(() => {
           throw new TRPCError({
@@ -168,7 +187,7 @@ export const challengesRouter = createTRPCRouter({
             userChallengeTasks: true,
             challenge: {
               select: {
-                point: true,
+                extraPoints: true,
               },
             },
             user: {
@@ -182,6 +201,19 @@ export const challengesRouter = createTRPCRouter({
       if (!userChallenge) {
         return taskUpdateRes;
       }
+
+      const pointsWithTaskCompleted =
+        userChallenge.user.points + taskUpdateRes.task.difficulty.points;
+
+      await ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          points: pointsWithTaskCompleted,
+        },
+      });
+
       const allTasksComplete = userChallenge.userChallengeTasks.every(
         (task) => !!task.taskCompletedAt
       );
@@ -199,8 +231,8 @@ export const challengesRouter = createTRPCRouter({
         );
 
         const pointsCalculated =
-          userChallenge.user.points +
-          userChallenge.challenge.point +
+          pointsWithTaskCompleted +
+          userChallenge.challenge.extraPoints +
           extraPoints;
 
         const ranks: Array<{ id: number }> = await ctx.prisma
@@ -241,7 +273,7 @@ export const challengesRouter = createTRPCRouter({
       select: {
         id: true,
         tasks: true,
-        point: true,
+        extraPoints: true,
         title: true,
         endDate: true,
       },
@@ -358,7 +390,14 @@ export const challengesRouter = createTRPCRouter({
           userId: input.userId,
         },
       });
-
+      const numberOfCompletedTasks = await ctx.prisma.userChallengeTask.count({
+        where: {
+          userId: input.userId,
+          taskCompletedAt: {
+            not: null,
+          },
+        },
+      });
       const numberOfCompletedChallenges = user.placements.length;
       const numberOfPodiums = user.placements.filter((p) => p <= 3).length;
       const numberOfFirst = user.placements.filter((p) => p === 1).length;
@@ -372,6 +411,7 @@ export const challengesRouter = createTRPCRouter({
         numberOfPodiums,
         numberOfFirst,
         points: user.points,
+        numberOfCompletedTasks,
       };
     }),
 });

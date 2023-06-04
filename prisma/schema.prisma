@@ -50,11 +50,12 @@ model User {
   accounts                Account[]
   sessions                Session[]
   challenges              UserChallenge[]
+  tasks              UserChallengeTask[]
   points                  Int             @default(0)
   placements              Int[]
   curChallengeExtraPoints Int             @default(0)
   rank Rank? @relation(fields: [rankId], references: [id])
-  rankId Int? 
+  rankId Int?
 
   @@index([rankId])
 }
@@ -65,6 +66,14 @@ model Rank {
   minPoints Int
   maxPoints Int
   users User[]
+}
+
+model Difficulty {
+  id   Int @id @default(autoincrement())
+  name String
+  description String
+  points Int
+  tasks Task[]
 }
 
 
@@ -82,7 +91,7 @@ model Challenge {
   description String
   startDate   DateTime
   endDate     DateTime
-  point       Int
+  extraPoints      Int
   tasks       Task[]
   users       UserChallenge[]
   // UserTask   UserTask[]
@@ -94,10 +103,13 @@ model Task {
   description       String
   challenge         Challenge           @relation(fields: [challengeId], references: [id])
   challengeId       String
-  // users        UserTask[]
   UserChallengeTask UserChallengeTask[]
+  difficulty Difficulty @relation(fields: [difficultyId], references: [id])
+  difficultyId Int
 
   @@index([challengeId])
+  @@index([difficultyId])
+
 }
 
 model UserChallengeTask {
@@ -108,9 +120,12 @@ model UserChallengeTask {
   userChallengeId String
   taskCompletedAt DateTime?
   notes           String?
+  user User @relation(fields: [userId], references: [id])
+  userId String
 
   @@index([userChallengeId])
   @@index([taskId])
+  @@index([userId])
 }
 
 model UserChallenge {
