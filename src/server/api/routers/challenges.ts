@@ -97,6 +97,12 @@ export const challengesRouter = createTRPCRouter({
               task: {
                 select: {
                   title: true,
+                  taskType: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                   description: true,
                   id: true,
                   difficulty: {

@@ -76,6 +76,13 @@ model Difficulty {
   tasks Task[]
 }
 
+model TaskType {
+  id   Int @id @default(autoincrement())
+  name String
+  description String
+  tasks Task[]
+}
+
 
 model VerificationToken {
   identifier String
@@ -94,7 +101,6 @@ model Challenge {
   extraPoints      Int
   tasks       Task[]
   users       UserChallenge[]
-  // UserTask   UserTask[]
 }
 
 model Task {
@@ -106,9 +112,13 @@ model Task {
   UserChallengeTask UserChallengeTask[]
   difficulty Difficulty @relation(fields: [difficultyId], references: [id])
   difficultyId Int
+  taskType TaskType @relation(fields: [taskTypeId], references: [id])
+  taskTypeId Int
+
 
   @@index([challengeId])
   @@index([difficultyId])
+  @@index([taskTypeId])
 
 }
 

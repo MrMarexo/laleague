@@ -14,6 +14,19 @@ import PodiumIcon from "~/components/Icons/PodiumIcon";
 import { MyButton } from "~/components/MyButton";
 import { Modal } from "~/components/Modal";
 
+const renderCorrectTypeIcon = (id: number) => {
+  switch (id) {
+    case 1:
+      return "💪";
+    case 2:
+      return "🫀";
+    case 3:
+      return "🏃💨";
+    default:
+      return "🏐";
+  }
+};
+
 const scoringTable = [
   { arr: ["1st", "3"] },
   { arr: ["2nd", "2"] },
@@ -72,8 +85,6 @@ const LoggedInForm: React.FC<{
     api.challenges.getTasksFromLastChallenge.useQuery(undefined, {
       enabled: false,
     });
-
-  // const handleInfo = (index: number) => {};
 
   const { mutateAsync } = api.challenges.setTaskValues.useMutation();
 
@@ -175,7 +186,7 @@ const LoggedInForm: React.FC<{
       </p>
       <div className="min-w-full border-b border-black dark:border-white" />
       {challengeData.userChallengeTasks.map((task, i) => (
-        <div key={task.id}>
+        <div key={task.id} className="mb-3 flex flex-col gap-2">
           <div className="relative flex flex-row items-center justify-between gap-6">
             <div className="effect-container relative flex items-center gap-2">
               <button
@@ -189,27 +200,27 @@ const LoggedInForm: React.FC<{
               >
                 <p>i</p>
               </button>
-              <p>{task.task.title}</p>
+              <div className="flex items-center gap-3">
+                <p>{task.task.title}</p>
+                {renderCorrectTypeIcon(task.task.taskType.id)}
+              </div>
               <div
                 className={`left-1/5 absolute bottom-6 ${
                   tasksState?.[i]?.isDescriptionOpen ? "" : "hidden"
                 } rounded border border-black bg-white px-4 py-2 dark:border-white dark:bg-black`}
               >
-                <p className="text-sm">{task.task.description}</p>
+                <p className="text-sm ">
+                  Type: <b>{task.task.taskType.name}</b>
+                </p>
+                <p className="text-sm">
+                  Difficulty: <b>{task.task.difficulty.name}</b>
+                </p>
+                <p className="mt-2 text-sm">
+                  Hint: <b>{task.task.description}</b>
+                </p>
               </div>
             </div>
-            {tasksState?.find((state) => state.id === task.id)?.isCompleted ? (
-              <div className="flex flex-row items-center gap-1">
-                <DoneCircle />
-                <p className="text-sm font-bold">Done</p>
-              </div>
-            ) : (
-              <MyButton
-                onClick={() => handleTaskStateBoolean(i, true, "isConfirmOpen")}
-              >
-                Complete
-              </MyButton>
-            )}
+
             <Modal
               isOpen={!!tasksState?.[i]?.isConfirmOpen}
               close={() => handleTaskStateBoolean(i, false, "isConfirmOpen")}
@@ -231,11 +242,21 @@ const LoggedInForm: React.FC<{
               </div>
             </Modal>
           </div>
-          <div className="flex items-center justify-between">
-            <p>
-              Difficulty: <i>{task.task.difficulty.name}</i>
-            </p>
-            <p className="font-bold">+{task.task.difficulty.points}p</p>
+          <div className="flex items-center justify-center">
+            {tasksState?.find((state) => state.id === task.id)?.isCompleted ? (
+              <div className="flex flex-row items-center gap-1">
+                <DoneCircle />
+                <p className="text-sm font-bold">
+                  +{task.task.difficulty.points}p
+                </p>
+              </div>
+            ) : (
+              <MyButton
+                onClick={() => handleTaskStateBoolean(i, true, "isConfirmOpen")}
+              >
+                Complete +{task.task.difficulty.points}p
+              </MyButton>
+            )}
           </div>
         </div>
       ))}
@@ -246,8 +267,9 @@ const LoggedInForm: React.FC<{
             Challenge completed
           </div>
         ) : (
-          <p className="font-bold">
-            +{challengeData?.challenge.extraPoints || 0}p
+          <p>
+            Full challenge bonus:{" "}
+            <b>+{challengeData?.challenge.extraPoints || 0}p</b>
           </p>
         )}
       </div>
