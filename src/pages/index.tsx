@@ -13,17 +13,21 @@ import { getPositionShort } from "~/utils/fns";
 import PodiumIcon from "~/components/Icons/PodiumIcon";
 import { MyButton } from "~/components/MyButton";
 import { Modal } from "~/components/Modal";
+import { HeartPulseIcon } from "~/components/Icons/HeartPulseIcon";
+import { MuscleIcon } from "~/components/Icons/MuscleIcon";
+import { NinjaIcon } from "~/components/Icons/NinjaIcon";
+import { VolleyballIcon } from "~/components/Icons/VolleyballIcon";
 
 const renderCorrectTypeIcon = (id: number) => {
   switch (id) {
     case 1:
-      return "💪";
+      return <MuscleIcon />;
     case 2:
-      return "🫀";
+      return <HeartPulseIcon />;
     case 3:
-      return "🏃💨";
+      return <NinjaIcon />;
     default:
-      return "🏐";
+      return <VolleyballIcon />;
   }
 };
 
@@ -64,15 +68,36 @@ const LoggedOutForm: React.FC = () => {
         </span>
       </p>
       <div className="min-w-full border-b border-black dark:border-white" />
+      {challengeData.tasks.map((task, i) => (
+        <div key={task.id} className="mb-3 flex flex-col gap-2">
+          <div className="relative flex flex-row items-center justify-center gap-6">
+            <div className="relative flex items-center gap-2">
+              {renderCorrectTypeIcon(task.taskTypeId)}
 
-      {challengeData.tasks.map((task) => (
-        <div key={task.id} className="flex flex-row justify-between gap-10">
-          <p>{task.title}</p>
-          <MyButton onClick={() => void signIn()}>Complete</MyButton>
+              <div className="flex items-center gap-3">
+                <p>{task.title}</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <MyButton onClick={() => void signIn()}>
+              Complete +{task.difficulty.points}p
+            </MyButton>
+            <div className="effect-container">
+              <button
+                onClick={() => void signIn()}
+                className="effect ml-2 mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-league-gray-6"
+              >
+                <p>i</p>
+              </button>
+            </div>
+          </div>
         </div>
       ))}
-      <div className="mt-1 flex flex-row justify-center">
-        <p className="font-bold">+{challengeData.extraPoints || 0}p</p>
+      <div className="mt-4 flex flex-row justify-center">
+        <p>
+          Full challenge bonus: <b>+{challengeData.extraPoints || 0}p</b>
+        </p>
       </div>
     </>
   );
@@ -185,81 +210,94 @@ const LoggedInForm: React.FC<{
         </span>
       </p>
       <div className="min-w-full border-b border-black dark:border-white" />
-      {challengeData.userChallengeTasks.map((task, i) => (
-        <div key={task.id} className="mb-3 flex flex-col gap-2">
-          <div className="relative flex flex-row items-center justify-between gap-6">
-            <div className="effect-container relative flex items-center gap-2">
-              <button
-                onClick={() =>
-                  handleTaskStateBoolean(i, true, "isDescriptionOpen")
-                }
-                onBlur={() =>
-                  handleTaskStateBoolean(i, false, "isDescriptionOpen")
-                }
-                className=" effect mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-league-gray-6"
-              >
-                <p>i</p>
-              </button>
-              <div className="flex items-center gap-3">
-                <p>{task.task.title}</p>
-                {renderCorrectTypeIcon(task.task.taskType.id)}
-              </div>
-              <div
-                className={`left-1/5 absolute bottom-6 ${
-                  tasksState?.[i]?.isDescriptionOpen ? "" : "hidden"
-                } rounded border border-black bg-white px-4 py-2 dark:border-white dark:bg-black`}
-              >
-                <p className="text-sm ">
-                  Type: <b>{task.task.taskType.name}</b>
-                </p>
-                <p className="text-sm">
-                  Difficulty: <b>{task.task.difficulty.name}</b>
-                </p>
-                <p className="mt-2 text-sm">
-                  Hint: <b>{task.task.description}</b>
-                </p>
-              </div>
-            </div>
+      {challengeData.userChallengeTasks.map((task, i) => {
+        const isComplete = tasksState?.find(
+          (state) => state.id === task.id
+        )?.isCompleted;
 
-            <Modal
-              isOpen={!!tasksState?.[i]?.isConfirmOpen}
-              close={() => handleTaskStateBoolean(i, false, "isConfirmOpen")}
-            >
-              <p className="text-center text-sm">
-                Are you sure you completed it?
-              </p>
-              <div className="flex gap-4">
-                <MyButton onClick={() => handleApi(task.id, challengeData)}>
-                  Yes
-                </MyButton>
+        return (
+          <div key={task.id} className="mb-3 flex flex-col gap-2">
+            <div className="relative flex flex-row items-center justify-center gap-6">
+              <div className="relative flex items-center gap-2">
+                {renderCorrectTypeIcon(task.task.taskType.id)}
+
+                <div className="flex items-center gap-3">
+                  <p className={isComplete ? "line-through" : ""}>
+                    {task.task.title}
+                  </p>
+                </div>
+                <div
+                  className={`left-1/5 absolute bottom-6 ${
+                    tasksState?.[i]?.isDescriptionOpen ? "" : "hidden"
+                  } rounded border border-black bg-white px-4 py-2 dark:border-white dark:bg-black`}
+                >
+                  <p className="text-sm ">
+                    Type: <b>{task.task.taskType.name}</b>
+                  </p>
+                  <p className="text-sm">
+                    Difficulty: <b>{task.task.difficulty.name}</b>
+                  </p>
+                  <p className="mt-2 text-sm">
+                    Hint: <b>{task.task.description}</b>
+                  </p>
+                </div>
+              </div>
+
+              <Modal
+                isOpen={!!tasksState?.[i]?.isConfirmOpen}
+                close={() => handleTaskStateBoolean(i, false, "isConfirmOpen")}
+              >
+                <p className="text-center text-sm">
+                  Are you sure you completed it?
+                </p>
+                <div className="flex gap-4">
+                  <MyButton onClick={() => handleApi(task.id, challengeData)}>
+                    Yes
+                  </MyButton>
+                  <MyButton
+                    onClick={() =>
+                      handleTaskStateBoolean(i, false, "isConfirmOpen")
+                    }
+                  >
+                    Hmmm ...
+                  </MyButton>
+                </div>
+              </Modal>
+            </div>
+            <div className="flex items-center justify-center">
+              {isComplete ? (
+                <div className="flex flex-row items-center gap-1">
+                  <DoneCircle />
+                  <p className="text-sm font-bold">
+                    +{task.task.difficulty.points}p
+                  </p>
+                </div>
+              ) : (
                 <MyButton
                   onClick={() =>
-                    handleTaskStateBoolean(i, false, "isConfirmOpen")
+                    handleTaskStateBoolean(i, true, "isConfirmOpen")
                   }
                 >
-                  Hmmm ...
+                  Complete +{task.task.difficulty.points}p
                 </MyButton>
+              )}
+              <div className="effect-container">
+                <button
+                  onClick={() =>
+                    handleTaskStateBoolean(i, true, "isDescriptionOpen")
+                  }
+                  onBlur={() =>
+                    handleTaskStateBoolean(i, false, "isDescriptionOpen")
+                  }
+                  className="effect ml-2 mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-league-gray-6"
+                >
+                  <p>i</p>
+                </button>
               </div>
-            </Modal>
+            </div>
           </div>
-          <div className="flex items-center justify-center">
-            {tasksState?.find((state) => state.id === task.id)?.isCompleted ? (
-              <div className="flex flex-row items-center gap-1">
-                <DoneCircle />
-                <p className="text-sm font-bold">
-                  +{task.task.difficulty.points}p
-                </p>
-              </div>
-            ) : (
-              <MyButton
-                onClick={() => handleTaskStateBoolean(i, true, "isConfirmOpen")}
-              >
-                Complete +{task.task.difficulty.points}p
-              </MyButton>
-            )}
-          </div>
-        </div>
-      ))}
+        );
+      })}
       <div className="mt-4 flex flex-row justify-center">
         {isChallengeCompleted ? (
           <div className="flex flex-row items-center gap-1 text-sm font-bold">

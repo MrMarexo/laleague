@@ -57,9 +57,6 @@ export const challengesRouter = createTRPCRouter({
       nextRank,
     };
   }),
-  getAllChallenges: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.challenge.findMany({ select: { tasks: true } });
-  }),
   getTasksFromLastChallenge: protectedProcedure.query(async ({ ctx }) => {
     const currentDate = new Date();
     const currentChallenge = await ctx.prisma.challenge.findFirst({
@@ -93,6 +90,11 @@ export const challengesRouter = createTRPCRouter({
           dateCompleted: true,
           id: true,
           userChallengeTasks: {
+            orderBy: {
+              task: {
+                difficultyId: "asc",
+              },
+            },
             select: {
               task: {
                 select: {
@@ -278,7 +280,18 @@ export const challengesRouter = createTRPCRouter({
       },
       select: {
         id: true,
-        tasks: true,
+        tasks: {
+          orderBy: {
+            difficultyId: "asc",
+          },
+          include: {
+            difficulty: {
+              select: {
+                points: true,
+              },
+            },
+          },
+        },
         extraPoints: true,
         title: true,
         endDate: true,
