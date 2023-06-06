@@ -45,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
               {emoji}
             </span>
           ))}
-          <p className="pl-5 font-extrabold md:pl-6">League</p>
+          <p className="pl-5 font-extrabold md:pl-6">Fit League</p>
         </Link>
         <section
           id="sidebar"

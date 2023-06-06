@@ -382,7 +382,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>League</title>
+        <title>Fit League</title>
         <meta
           name="description"
           content="Complete objectives and move up in ranks"
@@ -391,8 +391,8 @@ const Home: NextPage = () => {
       </Head>
       <Layout isWithBoxers>
         <div className="effect-container">
-          <h1 className="effect dark:text my-8 font-league text-7xl md:text-9xl">
-            Le<span className="pl-1">a</span>gue
+          <h1 className="effect dark:text my-8 text-center font-league text-7xl md:text-9xl">
+            Fit Le<span className="pl-1">a</span>gue
           </h1>
         </div>
         <h2 className="mb-4 text-xl">Weekly challenge</h2>
