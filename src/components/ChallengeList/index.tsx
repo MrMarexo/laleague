@@ -2,7 +2,6 @@ import React from "react";
 import { api } from "~/utils/api";
 import { format } from "date-fns";
 import { DoneCircle } from "../Icons/DoneCircle";
-import { getPositionShort } from "~/utils/fns";
 
 export const ChallengeList: React.FC = () => {
   const { data: challenges } =
@@ -25,7 +24,7 @@ export const ChallengeList: React.FC = () => {
       <section className="my-4 grid grid-cols-1 gap-x-5 gap-y-6 dark:text-white md:grid-cols-2 lg:grid-cols-3">
         {challenges.map(
           ({
-            placement,
+            isCompleted,
             challenge: { endDate, title },
             userChallengeTasks,
           }) => (
@@ -54,13 +53,13 @@ export const ChallengeList: React.FC = () => {
                 {format(endDate, "PP kk:mm")}
               </span>
               <span className="flex items-center justify-between">
-                {!!placement ? (
+                {isCompleted ? (
                   <>
                     <div className="flex flex-row items-center gap-1">
                       <DoneCircle />
                       <p className="text-sm font-bold">Done</p>
                     </div>
-                    <p className="font-bold">{getPositionShort(placement)}</p>
+                    {/* <p className="font-bold">{getPositionShort(placement)}</p> */}
                   </>
                 ) : (
                   <p className="font-bold">Not completed</p>

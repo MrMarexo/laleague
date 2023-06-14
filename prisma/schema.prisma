@@ -53,7 +53,7 @@ model User {
   tasks              UserChallengeTask[]
   points                  Int             @default(0)
   placements              Int[]
-  curChallengeExtraPoints Int             @default(0)
+  curChallengeExtraPoints Int?
   rank Rank? @relation(fields: [rankId], references: [id])
   rankId Int?
 
@@ -147,7 +147,6 @@ model UserChallenge {
   dateCompleted      DateTime?
   isCompleted        Boolean?
   userChallengeTasks UserChallengeTask[]
-  placement          Int?
   isAccepted         Boolean?
 
   @@index([userId])

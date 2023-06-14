@@ -227,21 +227,19 @@ export const challengesRouter = createTRPCRouter({
       );
 
       if (allTasksComplete) {
-        const completedChallengesCount = await ctx.prisma.userChallenge.count({
-          where: {
-            challengeId: input.challengeId,
-            isCompleted: true,
-          },
-        });
+        // const completedChallengesCount = await ctx.prisma.userChallenge.count({
+        //   where: {
+        //     challengeId: input.challengeId,
+        //     isCompleted: true,
+        //   },
+        // });
 
-        const { extraPoints, placement } = calculatePoints(
-          completedChallengesCount
-        );
+        // const { extraPoints, placement } = calculatePoints(
+        //   completedChallengesCount
+        // );
 
         const pointsCalculated =
-          pointsWithTaskCompleted +
-          userChallenge.challenge.extraPoints +
-          extraPoints;
+          pointsWithTaskCompleted + userChallenge.challenge.extraPoints;
 
         const ranks: Array<{ id: number }> = await ctx.prisma
           .$queryRaw`SELECT id FROM "Rank" WHERE "maxPoints" >= ${pointsCalculated} AND "minPoints" <= ${pointsCalculated};`;
@@ -251,14 +249,9 @@ export const challengesRouter = createTRPCRouter({
           data: {
             dateCompleted: new Date(),
             isCompleted: true,
-            placement,
             user: {
               update: {
                 points: pointsCalculated,
-                curChallengeExtraPoints: extraPoints,
-                placements: {
-                  push: placement,
-                },
                 rank: {
                   connect: {
                     id: ranks[0]!.id,
@@ -361,7 +354,6 @@ export const challengesRouter = createTRPCRouter({
       take: 9,
       select: {
         isCompleted: true,
-        placement: true,
         userChallengeTasks: {
           select: {
             taskCompletedAt: true,
@@ -394,7 +386,6 @@ export const challengesRouter = createTRPCRouter({
           points: true,
           name: true,
           rank: true,
-          placements: true,
         },
       });
       if (!user) {
@@ -417,9 +408,12 @@ export const challengesRouter = createTRPCRouter({
           },
         },
       });
-      const numberOfCompletedChallenges = user.placements.length;
-      const numberOfPodiums = user.placements.filter((p) => p <= 3).length;
-      const numberOfFirst = user.placements.filter((p) => p === 1).length;
+      const numberOfCompletedChallenges = await ctx.prisma.userChallenge.count({
+        where: {
+          userId: input.userId,
+          isCompleted: true,
+        },
+      });
 
       return {
         id: user.id,
@@ -427,8 +421,6 @@ export const challengesRouter = createTRPCRouter({
         rank: user.rank,
         numberOfCompletedChallenges,
         numberOfAttendedChallenges,
-        numberOfPodiums,
-        numberOfFirst,
         points: user.points,
         numberOfCompletedTasks,
       };

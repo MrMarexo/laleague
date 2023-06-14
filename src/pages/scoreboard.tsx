@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import { getImgIdFromRankId } from "~/utils/fns";
 import Link from "~/components/Link/Link";
 import { useSession } from "next-auth/react";
+import PodiumIcon from "~/components/Icons/PodiumIcon";
 
 const Scoreboard: NextPage = () => {
   const { data } = api.challenges.getLeaderboard.useQuery();
@@ -16,6 +17,9 @@ const Scoreboard: NextPage = () => {
     <Layout>
       <h2 className="mb-4 mt-10 text-xl">Who&apos;s leading?</h2>
       <div className="flex w-fit flex-col gap-3 rounded-lg border-2 border-black px-4 py-2 dark:border-gray-400">
+        <div className="mb-6 mt-4 flex flex-row justify-center">
+          <PodiumIcon />
+        </div>
         {data ? (
           data.map((user, i) => {
             const imgId = getImgIdFromRankId(user.rankId || 1);

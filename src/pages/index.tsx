@@ -4,19 +4,17 @@ import { useEffect, useState } from "react";
 
 import Layout from "~/components/Layout";
 
-import { api, type RouterOutputs } from "~/utils/api";
-import { signIn, useSession } from "next-auth/react";
 import format from "date-fns/format";
+import { signIn, useSession } from "next-auth/react";
 import { DoneCircle } from "~/components/Icons/DoneCircle";
-import Link from "~/components/Link/Link";
-import { getPositionShort } from "~/utils/fns";
-import PodiumIcon from "~/components/Icons/PodiumIcon";
-import { MyButton } from "~/components/MyButton";
-import { Modal } from "~/components/Modal";
 import { HeartPulseIcon } from "~/components/Icons/HeartPulseIcon";
 import { MuscleIcon } from "~/components/Icons/MuscleIcon";
 import { NinjaIcon } from "~/components/Icons/NinjaIcon";
 import { VolleyballIcon } from "~/components/Icons/VolleyballIcon";
+import Link from "~/components/Link/Link";
+import { Modal } from "~/components/Modal";
+import { MyButton } from "~/components/MyButton";
+import { api, type RouterOutputs } from "~/utils/api";
 
 const renderCorrectTypeIcon = (id: number) => {
   switch (id) {
@@ -30,12 +28,6 @@ const renderCorrectTypeIcon = (id: number) => {
       return <VolleyballIcon />;
   }
 };
-
-const scoringTable = [
-  { arr: ["1st", "3"] },
-  { arr: ["2nd", "2"] },
-  { arr: ["3rd", "1"] },
-];
 
 type TaskStateProps = {
   id: string;
@@ -335,14 +327,14 @@ const Home: NextPage = () => {
   }, [isChallengeComplete]);
 
   const getUsers = () => {
-    const defaultItems = scoringTable.map(({ arr }) => (
+    const defaultItems = [1, 2, 3].map((num) => (
       <div
-        key={arr[0]}
-        className="flex flex-row justify-between gap-6 text-gray-400"
+        key={num}
+        className="flex flex-row justify-between gap-4 text-gray-400"
       >
-        <p className="font-bold">{arr[0]}</p>
-        <p>No one yet</p>
-        <p className="font-bold">+{arr[1]}p</p>
+        <p>Someone</p>
+        <p>-</p>
+        <p>Very soon</p>
       </div>
     ));
     if (completedUsersData) {
@@ -350,28 +342,23 @@ const Home: NextPage = () => {
         ({ user, dateCompleted }, index) => {
           const isMe = sessionData && sessionData.user.id === user.id;
           return (
-            <div key={index} className="flex flex-row justify-between gap-6">
-              <p className="font-bold">{getPositionShort(index + 1)}</p>
-              <p>
+            <div key={index} className="flex flex-row justify-between gap-4">
+              <p className="font-bold">
                 {isMe ? (
-                  <i>
-                    <Link href="/results">{user.name}</Link>
-                  </i>
+                  <Link href="/results">{user.name}</Link>
                 ) : (
                   <Link href={`/results/${user.id}`}>{user.name}</Link>
-                )}{" "}
-                - {format(dateCompleted!, "PP kk:mm")}
+                )}
               </p>
-              <p className="font-bold">
-                +{index < 3 ? scoringTable[index]?.arr[1] : 0}p
-              </p>
+              <p>-</p>
+              <p>{format(dateCompleted as Date, "PP kk:mm")}</p>
             </div>
           );
         }
       );
       for (let i = 0; i < defaultItems.length; i++) {
         if (!userItems[i]) {
-          userItems[i] = defaultItems[i]!;
+          userItems[i] = defaultItems[i] as JSX.Element;
         }
       }
       return userItems;
@@ -411,9 +398,6 @@ const Home: NextPage = () => {
           Who completed this challenge already?
         </h2>
         <div className="mb-10 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
-          <div className="flex flex-row justify-center">
-            <PodiumIcon />
-          </div>
           {getUsers()}
         </div>
       </Layout>

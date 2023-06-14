@@ -10,9 +10,9 @@ import { getImgIdFromRankId } from "~/utils/fns";
 import { Loading } from "~/components/Icons/Loading";
 import { SignIn } from "~/components/SignIn";
 import AttendeesIcon from "~/components/Results/AttendeesIcon";
-import CupIcon from "~/components/Results/CupIcon";
+// import CupIcon from "~/components/Results/CupIcon";
 import CheckStarIcon from "~/components/Results/CheckStarIcon";
-import PodiumStarIcon from "~/components/Results/PodiumStarsIcon";
+// import PodiumStarIcon from "~/components/Results/PodiumStarsIcon";
 import CheckmarksIcon from "~/components/Results/CheckmarksIcon";
 
 export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
@@ -30,7 +30,7 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
     },
     {
       icon: <CheckStarIcon />,
-      label: "Challenges completed",
+      label: "Challenges fully completed",
       value: profileData?.numberOfCompletedChallenges,
     },
     {
@@ -38,16 +38,16 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
       label: "Tasks completed",
       value: profileData?.numberOfCompletedTasks,
     },
-    {
-      icon: <PodiumStarIcon />,
-      label: "Podiums",
-      value: profileData?.numberOfPodiums,
-    },
-    {
-      icon: <CupIcon />,
-      label: "First places",
-      value: profileData?.numberOfFirst,
-    },
+    // {
+    //   icon: <PodiumStarIcon />,
+    //   label: "Podiums",
+    //   value: profileData?.numberOfPodiums,
+    // },
+    // {
+    //   icon: <CupIcon />,
+    //   label: "First places",
+    //   value: profileData?.numberOfFirst,
+    // },
   ];
 
   return (
