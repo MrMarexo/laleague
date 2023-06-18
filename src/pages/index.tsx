@@ -16,6 +16,22 @@ import { Modal } from "~/components/Modal";
 import { MyButton } from "~/components/MyButton";
 import { api, type RouterOutputs } from "~/utils/api";
 
+export type SearchType = 1 | 2 | 3 | 99;
+
+const Select = ({ setType }: { setType: (type: SearchType) => void }) => {
+  return (
+    <select
+      className="rounded border border-black text-center text-sm"
+      onChange={(e) => setType(parseInt(e.currentTarget.value) as SearchType)}
+    >
+      <option value={99}>the challenge</option>
+      <option value={1}>the first task</option>
+      <option value={2}>the second task</option>
+      <option value={3}>the third task</option>
+    </select>
+  );
+};
+
 const renderCorrectTypeIcon = (id: number) => {
   switch (id) {
     case 1:
@@ -309,16 +325,20 @@ const LoggedInForm: React.FC<{
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
+  const [searchType, setSearchType] = useState<1 | 2 | 3 | 99>(99);
 
   const [isChallengeComplete, setIsChallengeComplete] = useState(false);
-  const { refetch, data: completedUsersData } =
-    api.challenges.getCompletedUsers.useQuery(undefined, {
-      enabled: false,
-    });
+  const { refetch: refetch, data: completedUsersData } =
+    api.challenges.getCompletedUsers.useQuery(
+      { searchType },
+      {
+        enabled: false,
+      }
+    );
 
   useEffect(() => {
     void refetch();
-  }, []);
+  }, [searchType]);
 
   useEffect(() => {
     if (isChallengeComplete) {
@@ -339,15 +359,15 @@ const Home: NextPage = () => {
     ));
     if (completedUsersData) {
       const userItems = completedUsersData.map(
-        ({ user, dateCompleted }, index) => {
-          const isMe = sessionData && sessionData.user.id === user.id;
+        ({ id, name, dateCompleted }, index) => {
+          const isMe = sessionData && sessionData.user.id === id;
           return (
             <div key={index} className="flex flex-row justify-between gap-4">
               <p className="font-bold">
                 {isMe ? (
-                  <Link href="/results">{user.name}</Link>
+                  <Link href="/results">{name}</Link>
                 ) : (
-                  <Link href={`/results/${user.id}`}>{user.name}</Link>
+                  <Link href={`/results/${id}`}>{name}</Link>
                 )}
               </p>
               <p>-</p>
@@ -395,7 +415,8 @@ const Home: NextPage = () => {
           )}
         </div>
         <h2 className="mb-4 text-center text-xl">
-          Who completed this challenge already?
+          Who completed <Select setType={(type) => setSearchType(type)} />{" "}
+          already?
         </h2>
         <div className="mb-10 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           {getUsers()}

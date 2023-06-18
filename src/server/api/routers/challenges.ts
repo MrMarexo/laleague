@@ -1,14 +1,11 @@
-import { calculatePoints } from "./../../../utils/fns";
 import { z } from "zod";
 
+import { TRPCError } from "@trpc/server";
 import {
   createTRPCRouter,
-  publicProcedure,
   protectedProcedure,
+  publicProcedure,
 } from "~/server/api/trpc";
-import { TRPCError } from "@trpc/server";
-
-// import { EventEmitter } from 'events';
 
 export const challengesRouter = createTRPCRouter({
   // onNewUser: protectedProcedure.subscription(() => {
@@ -291,42 +288,97 @@ export const challengesRouter = createTRPCRouter({
       },
     });
   }),
-  getCompletedUsers: publicProcedure.query(async ({ ctx }) => {
-    const currentDate = new Date();
-    const curentChallenge = await ctx.prisma.challenge.findFirst({
-      where: {
-        startDate: { lte: currentDate },
-        endDate: { gte: currentDate },
-      },
-      select: {
-        id: true,
-      },
-    });
-    const curChallengeId = curentChallenge?.id;
-    if (!curChallengeId) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `CURRENTCHALLENGE NOT FOUND`,
+  getCompletedUsers: publicProcedure
+    .input(z.object({ searchType: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const currentDate = new Date();
+      const curentChallenge = await ctx.prisma.challenge.findFirst({
+        where: {
+          startDate: { lte: currentDate },
+          endDate: { gte: currentDate },
+        },
+        select: {
+          id: true,
+        },
       });
-    }
-    return await ctx.prisma.userChallenge.findMany({
-      where: {
-        challengeId: curChallengeId,
-        isCompleted: true,
-      },
-      orderBy: {
-        dateCompleted: "asc",
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            id: true,
+      const curChallengeId = curentChallenge?.id;
+      if (!curChallengeId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `CURRENTCHALLENGE NOT FOUND`,
+        });
+      }
+      const users: Array<{
+        name: string | null;
+        id: string;
+        dateCompleted: Date | null;
+      }> = [];
+
+      if (input.searchType === 99) {
+        const userChallenges = await ctx.prisma.userChallenge.findMany({
+          where: {
+            challengeId: curChallengeId,
+            isCompleted: true,
+          },
+          orderBy: {
+            dateCompleted: "asc",
+          },
+          include: {
+            userChallengeTasks: {
+              select: {
+                taskCompletedAt: true,
+                task: {
+                  select: {
+                    difficultyId: true,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        });
+
+        userChallenges.forEach(({ dateCompleted, user: { id, name } }) => {
+          users.push({ id, name, dateCompleted });
+        });
+
+        return users;
+      }
+
+      const resTask = await ctx.prisma.userChallengeTask.findMany({
+        where: {
+          userChallenge: {
+            challengeId: curChallengeId,
+          },
+          taskCompletedAt: {
+            not: null,
+          },
+          task: {
+            difficultyId: input.searchType,
           },
         },
-      },
-    });
-  }),
+        select: {
+          user: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+          taskCompletedAt: true,
+        },
+      });
+
+      resTask.forEach(({ user: { name, id }, taskCompletedAt }) => {
+        users.push({ id, name, dateCompleted: taskCompletedAt });
+      });
+
+      return users;
+    }),
   getLeaderboard: publicProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.user.findMany({
       orderBy: {
