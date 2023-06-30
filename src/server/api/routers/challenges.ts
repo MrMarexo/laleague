@@ -210,12 +210,26 @@ export const challengesRouter = createTRPCRouter({
       const pointsWithTaskCompleted =
         userChallenge.user.points + taskUpdateRes.task.difficulty.points;
 
+      const getRanks = async (
+        points: number
+      ): Promise<Array<{ id: number }>> => {
+        return await ctx.prisma
+          .$queryRaw`SELECT id FROM "Rank" WHERE "maxPoints" >= ${points} AND "minPoints" <= ${points};`;
+      };
+
+      const newRanks = await getRanks(pointsWithTaskCompleted);
+
       await ctx.prisma.user.update({
         where: {
           id: ctx.session.user.id,
         },
         data: {
           points: pointsWithTaskCompleted,
+          rank: {
+            connect: {
+              id: newRanks[0]?.id,
+            },
+          },
         },
       });
 
@@ -238,8 +252,7 @@ export const challengesRouter = createTRPCRouter({
         const pointsCalculated =
           pointsWithTaskCompleted + userChallenge.challenge.extraPoints;
 
-        const ranks: Array<{ id: number }> = await ctx.prisma
-          .$queryRaw`SELECT id FROM "Rank" WHERE "maxPoints" >= ${pointsCalculated} AND "minPoints" <= ${pointsCalculated};`;
+        const finalizedRanks = await getRanks(pointsCalculated);
 
         await ctx.prisma.userChallenge.update({
           where: { id: input.userChallengeId },
@@ -251,7 +264,7 @@ export const challengesRouter = createTRPCRouter({
                 points: pointsCalculated,
                 rank: {
                   connect: {
-                    id: ranks[0]!.id,
+                    id: finalizedRanks[0]!.id,
                   },
                 },
               },
