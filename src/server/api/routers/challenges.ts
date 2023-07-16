@@ -12,7 +12,6 @@ export const challengesRouter = createTRPCRouter({
   //   console.log()
   //   return;
   // }),
-
   getAchievedRanks: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: {
@@ -438,6 +437,19 @@ export const challengesRouter = createTRPCRouter({
       },
     });
   }),
+
+  setUserName: protectedProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          name: input.name,
+        },
+      });
+    }),
 
   getUserResults: publicProcedure
     .input(z.object({ userId: z.string() }))

@@ -5,6 +5,9 @@ import BurgerButton from "./BurgerButton";
 import { LightSwitch } from "../LightSwitch";
 import { SignIn } from "../SignIn";
 import { SignOut } from "../SignOut";
+import { Modal } from "../Modal";
+import { api } from "~/utils/api";
+import { MyButton } from "../MyButton";
 
 type NavbarProps = {
   onThemeToggle: () => void;
@@ -17,6 +20,13 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
 
   const [currentEmojiIndex, setCurrentEmojiIndex] = useState(0);
   const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const { data: sessionData } = useSession();
+
+  const { mutateAsync } = api.challenges.setUserName.useMutation();
+
+  const [changedName, setChangedName] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,6 +44,31 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
   return (
     <div className="fixed z-20 flex w-full flex-row justify-between bg-white px-5 py-2 dark:bg-black-800 md:px-20">
       <nav className="flex flex-row items-center gap-5 text-lg md:gap-8">
+        <Modal isOpen={isSettingsOpen} close={() => setSettingsOpen(false)}>
+          <p className="mt-2 text-center text-xs">
+            {" "}
+            Hi, my name is...what?
+            <br />
+            My name is...who?
+            <br />
+            My name is...chka chka
+          </p>
+          <h2 className="mb-2 text-2xl">{sessionData?.user.name}</h2>
+          <input
+            className="px-2 py-1"
+            onChange={(e) => setChangedName(e.currentTarget.value)}
+          />
+          <MyButton
+            onClick={() => {
+              void mutateAsync({ name: changedName });
+              window.location.reload();
+            }}
+            disabled={!changedName}
+          >
+            Change name
+          </MyButton>
+          <div className="mb-0.5" />
+        </Modal>
         <Link href="/">
           {emojis.map((emoji, index) => (
             <span
@@ -66,8 +101,14 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
       <div className="flex flex-row items-center gap-2 md:text-lg">
         {data?.user?.name ? (
           <>
-            <div className="hidden md:block">
-              Welcome, <span className="font-bold">{data.user.name}</span>
+            <div className="effect-container hidden md:block">
+              Welcome,{" "}
+              <span
+                onClick={() => setSettingsOpen(true)}
+                className="effect cursor-pointer font-bold"
+              >
+                {data.user.name}
+              </span>
             </div>
             <div className="hidden md:block">|</div>
             <SignOut />

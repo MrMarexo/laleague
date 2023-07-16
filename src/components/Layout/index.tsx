@@ -19,7 +19,6 @@ const Layout: ReactFCC<{ isFlexOff?: boolean; isWithBoxers?: boolean }> = ({
   return (
     <main className="flex min-h-screen flex-col items-center bg-white text-black dark:bg-black-800 dark:text-white">
       <Navbar isDark={isDark} onThemeToggle={handleThemeToggle} />
-
       {isWithBoxers === true ? (
         <>
           <div className="position absolute z-0 mt-20 hidden w-screen pt-10 md:block">
