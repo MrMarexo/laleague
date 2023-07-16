@@ -55,7 +55,8 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDark }) => {
           </p>
           <h2 className="mb-2 text-2xl">{sessionData?.user.name}</h2>
           <input
-            className="px-2 py-1"
+            className="bg-gray-200 px-2 py-1 dark:bg-black-800"
+            placeholder="Write here"
             onChange={(e) => setChangedName(e.currentTarget.value)}
           />
           <MyButton
