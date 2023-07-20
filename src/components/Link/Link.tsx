@@ -5,14 +5,16 @@ import { useRouter } from "next/router";
 
 interface ILinkProps {
   href: string;
+  isExternal?: boolean;
 }
 
-const Link: ReactFCC<ILinkProps> = ({ children, href }) => {
+const Link: ReactFCC<ILinkProps> = ({ children, href, isExternal }) => {
   const { pathname } = useRouter();
 
   return (
     <NextLink
       href={href}
+      target={isExternal ? "_blank" : ""}
       className={
         pathname === href ? "effect-always-container" : "effect-container"
       }

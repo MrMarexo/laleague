@@ -57,12 +57,11 @@ export const ChallengeList: React.FC = () => {
                   <>
                     <div className="flex flex-row items-center gap-1">
                       <DoneCircle />
-                      <p className="text-sm font-bold">Done</p>
+                      <p className="text-sm font-bold">All tasks completed</p>
                     </div>
-                    {/* <p className="font-bold">{getPositionShort(placement)}</p> */}
                   </>
                 ) : (
-                  <p className="font-bold">Not completed</p>
+                  <p className="font-bold">Not fully completed</p>
                 )}
               </span>
             </article>

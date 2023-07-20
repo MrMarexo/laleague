@@ -398,7 +398,7 @@ const Home: NextPage = () => {
       </Head>
       <Layout isWithBoxers>
         <div className="effect-container">
-          <h1 className="effect dark:text my-8 text-center font-league text-7xl md:text-9xl">
+          <h1 className="effect dark:text mb-8 text-center font-league text-7xl md:text-9xl">
             Fit Le<span className="pl-1">a</span>gue
           </h1>
         </div>
@@ -418,7 +418,7 @@ const Home: NextPage = () => {
           Who completed <Select setType={(type) => setSearchType(type)} />{" "}
           already?
         </h2>
-        <div className="mb-10 flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
+        <div className="flex flex-col gap-4 rounded-lg border-2 border-black px-8 py-4 dark:border-white">
           {getUsers()}
         </div>
       </Layout>

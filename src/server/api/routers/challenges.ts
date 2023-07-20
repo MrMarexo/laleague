@@ -415,6 +415,11 @@ export const challengesRouter = createTRPCRouter({
           endDate: { lte: currentDate },
         },
       },
+      orderBy: {
+        challenge: {
+          endDate: "desc",
+        },
+      },
       take: 9,
       select: {
         isCompleted: true,
