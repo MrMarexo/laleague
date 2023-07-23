@@ -9,12 +9,13 @@ import { signIn, useSession } from "next-auth/react";
 import { DoneCircle } from "~/components/Icons/DoneCircle";
 import { HeartPulseIcon } from "~/components/Icons/HeartPulseIcon";
 import { MuscleIcon } from "~/components/Icons/MuscleIcon";
-import { NinjaIcon } from "~/components/Icons/NinjaIcon";
+// import { NinjaIcon } from "~/components/Icons/NinjaIcon";
 import { VolleyballIcon } from "~/components/Icons/VolleyballIcon";
 import Link from "~/components/Link/Link";
 import { Modal } from "~/components/Modal";
 import { MyButton } from "~/components/MyButton";
 import { api, type RouterOutputs } from "~/utils/api";
+import { SpeedrunIcon } from "~/components/Icons/SpeedrunIcon";
 
 export type SearchType = 1 | 2 | 3 | 99;
 
@@ -39,7 +40,7 @@ const renderCorrectTypeIcon = (id: number) => {
     case 2:
       return <HeartPulseIcon />;
     case 3:
-      return <NinjaIcon />;
+      return <SpeedrunIcon />;
     default:
       return <VolleyballIcon />;
   }
