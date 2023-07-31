@@ -14,6 +14,9 @@ import AttendeesIcon from "~/components/Results/AttendeesIcon";
 import CheckStarIcon from "~/components/Results/CheckStarIcon";
 // import PodiumStarIcon from "~/components/Results/PodiumStarsIcon";
 import CheckmarksIcon from "~/components/Results/CheckmarksIcon";
+import AgilityIcon from "~/components/Results/AgilityIcon";
+import StrenghtIcon from "~/components/Results/StrengthIcon";
+import EnduranceIcon from "~/components/Results/EnduranceIcon";
 
 export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
   const { data: profileData } = api.challenges.getUserResults.useQuery({
@@ -37,6 +40,21 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
       icon: <CheckmarksIcon />,
       label: "Tasks completed",
       value: profileData?.numberOfCompletedTasks,
+    },
+    {
+      icon: <AgilityIcon />,
+      label: "Agility completed",
+      value: 12,
+    },
+    {
+      icon: <StrenghtIcon />,
+      label: "Strength completed",
+      value: 12,
+    },
+    {
+      icon: <EnduranceIcon />,
+      label: "Endurance completed",
+      value: 12,
     },
     // {
     //   icon: <PodiumStarIcon />,
