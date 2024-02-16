@@ -44,17 +44,17 @@ export const UserResults: React.FC<{ userId: string }> = ({ userId }) => {
     {
       icon: <AgilityIcon />,
       label: "Agility completed",
-      value: 12,
+      value: 0,
     },
     {
       icon: <StrenghtIcon />,
       label: "Strength completed",
-      value: 12,
+      value: 0,
     },
     {
       icon: <EnduranceIcon />,
       label: "Endurance completed",
-      value: 12,
+      value: 0,
     },
     // {
     //   icon: <PodiumStarIcon />,
